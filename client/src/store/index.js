@@ -167,7 +167,10 @@ function GlobalStoreContextProvider(props) {
         let response = await api.getTop5ListById(id);
         if (response.data.success) {
             let top5List = response.data.top5List;
-            top5List.name = newName;
+            if(newName!==""){
+                top5List.name = newName;
+            }
+            //top5List.name = newName;
             async function updateList(top5List) {
                 response = await api.updateTop5ListById(top5List._id, top5List);
                 if (response.data.success) {
@@ -230,9 +233,15 @@ function GlobalStoreContextProvider(props) {
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = async function () {
+        //store.getAllLists();
         const response = await api.getTop5ListPairs();
         if (response.data.success) {
             let pairsArray = response.data.idNamePairs;
+            console.log(pairsArray);
+            pairsArray.forEach(element => {
+                console.log(element);
+                console.log(element.ownerEmail);
+            });
             storeReducer({
                 type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                 payload: pairsArray
@@ -240,6 +249,17 @@ function GlobalStoreContextProvider(props) {
         }
         else {
             console.log("API FAILED TO GET THE LIST PAIRS");
+        }
+    }
+
+    store.getAllLists = async function () {
+        //getAllTop5Lists
+        const response = await api.getAllTop5Lists();
+        if (response.data.success) {
+            console.log(response.data);
+        }
+        else {
+            console.log("API FAILED TO GET THE LISTs");
         }
     }
 
