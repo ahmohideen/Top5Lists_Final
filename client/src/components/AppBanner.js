@@ -18,6 +18,7 @@ export default function AppBanner() {
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
 
+
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -29,6 +30,7 @@ export default function AppBanner() {
     const handleLogout = () => {
         handleMenuClose();
         auth.logoutUser();
+        initialVisible = false;
     }
 
     const menuId = 'primary-search-account-menu';
@@ -49,6 +51,7 @@ export default function AppBanner() {
             onClose={handleMenuClose}
         >
             <MenuItem onClick={handleMenuClose}><Link to='/register/'>Create New Account</Link></MenuItem>
+            <MenuItem onClick={handleMenuClose}><Link to='/login/'>Login</Link></MenuItem>
         </Menu>
     );
     const loggedInMenu = 
@@ -68,17 +71,29 @@ export default function AppBanner() {
             onClose={handleMenuClose}
         >
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            
         </Menu>        
 
     let editToolbar = "";
     let menu = loggedOutMenu;
+    let initialVisible = false;
+    let firstInitial = "";
+    let lastInitial = "";
     if (auth.loggedIn) {
+        initialVisible = true;
         menu = loggedInMenu;
+        firstInitial = auth.user.firstName.substring(0,1);
+        lastInitial = auth.user.lastName.substring(0,1);
         if (store.currentList) {
             editToolbar = <EditToolbar />;
         }
     }
     
+    function initialClicked(){
+        console.log(initialVisible);
+        console.log(auth.user);
+    }
+
     function getAccountMenu(loggedIn) {
         return <AccountCircle />;
     }
@@ -108,6 +123,11 @@ export default function AppBanner() {
                         >
                             { getAccountMenu(auth.loggedIn) }
                         </IconButton>
+                    <Typography variant="h5"
+                        noWrap
+                        component="div"
+                        sx={{ display: { xs: 'none', sm: 'block' } }} 
+                        visible={initialVisible}>{firstInitial +  lastInitial}</Typography>
                     </Box>
                 </Toolbar>
             </AppBar>
