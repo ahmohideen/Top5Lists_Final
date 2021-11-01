@@ -30,6 +30,7 @@ export default function DeleteModal() {
     }
     if(store.listMarkedForDeletion) {
         open = true;
+        name = store.listMarkedForDeletion.name;
     }
   
   function handleDeleteList(event) {
