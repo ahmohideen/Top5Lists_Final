@@ -43,6 +43,9 @@ function ListCard(props) {
     async function handleDeleteList(event, id) {
         event.stopPropagation();
         store.markListForDeletion(id);
+        console.log("handling delete...");
+        //let modal = document.getElementById("delete-modal");
+        //modal.classList.add("is-visible");
     }
 
     function handleKeyPress(event) {
