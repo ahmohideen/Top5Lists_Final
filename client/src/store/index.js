@@ -233,15 +233,34 @@ function GlobalStoreContextProvider(props) {
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = async function () {
-        //store.getAllLists();
+
+        let listWithEmails = await store.getAllLists().then((e) => {
+            return e
+        });
+        console.log(listWithEmails);
+
         const response = await api.getTop5ListPairs();
         if (response.data.success) {
+            //console.log(response.data);
             let pairsArray = response.data.idNamePairs;
             console.log(pairsArray);
-            pairsArray.forEach(element => {
-                console.log(element);
-                console.log(element.ownerEmail);
-            });
+            let tempArray = pairsArray;
+            if(listWithEmails){
+                for(let x = 0; x < tempArray.length; x++){
+                    if(tempArray[x]._id === listWithEmails[x]._id){
+                        //console.log("id matches");
+                        if(listWithEmails[x].ownerEmail === auth.user.email){
+                            //console.log("email matches!");
+                        }
+                        else{
+                            console.log("removing non user lists");
+                            tempArray.splice(x, 1);
+                        }
+                    }
+                }
+            }
+            console.log(tempArray);
+            pairsArray = tempArray;
             storeReducer({
                 type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                 payload: pairsArray
@@ -256,11 +275,24 @@ function GlobalStoreContextProvider(props) {
         //getAllTop5Lists
         const response = await api.getAllTop5Lists();
         if (response.data.success) {
-            console.log(response.data);
+            //console.log(response.data);
+            let listWithEmails = response.data.data;
+            // console.log("With Emails");
+            // console.log(listWithEmails.data);
+            listWithEmails.forEach(element => {
+                //console.log(element);
+                //console.log(element.ownerEmail);
+            });
+            // for(let x = 0; x < listWithEmails.length; x++){
+            //     console.log(listWithEmails[x]);
+            // }
+            return listWithEmails;
         }
         else {
             console.log("API FAILED TO GET THE LISTs");
         }
+
+        //store.getLists()
     }
 
     // THE FOLLOWING 5 FUNCTIONS ARE FOR COORDINATING THE DELETION
