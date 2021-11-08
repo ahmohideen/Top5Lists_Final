@@ -44,34 +44,14 @@ loginUser = async(req, res) => {
         console.log("returned existing user");
         console.log(existingUser);
         let flag = false;
-        let firstName = existingUser.firstName;
-        let lastName = existingUser.lastName;
-        let e = existingUser.email;
-        let passwordHash = existingUser.passwordHash;
-        bcrypt.compare(password, existingUser.passwordHash, function(err, data) {
-            if (err){
-              // handle error
-            }
-            if (data) {
-              // Send JWT
-              flag = true;
 
-              //return res.status(200).json({ msg: "Login success" })
-            } 
-            else {
-              // response is OutgoingMessage object that server response http request
-              return res.status(401).json({ msg: "Invalid credential" })
-            }
-        });
+        const match = await bcrypt.compare(password, existingUser.passwordHash);
 
-        if(flag){
-            const user = new User({
-                firstName, lastName, e, passwordHash
-              });
+        if(match){
                 //const savedUser = await newUser.save();
         
                 // LOGIN THE USER
-              const token = auth.signToken(user);
+              const token = auth.signToken(existingUser);
               
               await res.cookie("token", token, {
                 httpOnly: true,
@@ -81,11 +61,14 @@ loginUser = async(req, res) => {
                     msg: "Login successful",
                     success: true,
                     user: {
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                        email: user.email
+                        firstName: existingUser.firstName,
+                        lastName: existingUser.lastName,
+                        email: existingUser.email
                     }
                 }).send();
+        }
+        else{
+            return res.status(402).json({errorMessage: "this password is incorrect"});
         }
         
         //res.status(200).json({data: existingUser}).send();
@@ -95,6 +78,20 @@ loginUser = async(req, res) => {
         console.error(err);
         res.status(403).json({ msg: "BAD LOGIN" }).send();
         //idk if it should be like this
+    }
+}
+
+logoutUser = async(req, res) => {
+    console.log("logging out from within user controller")
+    try {
+        await res.clearCookie("token").status(200).json({
+            success: true,
+            msg: "LOGGED OUT"
+        }).send();
+    }
+    catch(error){
+        console.error(error);
+        res.status(500).send();
     }
 }
 
@@ -164,5 +161,6 @@ registerUser = async (req, res) => {
 module.exports = {
     getLoggedIn,
     loginUser,
+    logoutUser,
     registerUser
 }

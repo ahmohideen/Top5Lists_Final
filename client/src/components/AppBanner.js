@@ -29,7 +29,7 @@ export default function AppBanner() {
 
     const handleLogout = () => {
         handleMenuClose();
-        auth.logoutUser();
+        auth.logoutUser(store);
         initialVisible = false;
     }
 

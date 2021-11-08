@@ -175,9 +175,31 @@ function GlobalStoreContextProvider(props) {
                 response = await api.updateTop5ListById(top5List._id, top5List);
                 if (response.data.success) {
                     async function getListPairs(top5List) {
+                        
+                        let listWithEmails = await store.getAllLists().then((e) => {
+                            return e
+                        });
+                        console.log(listWithEmails);
                         response = await api.getTop5ListPairs();
                         if (response.data.success) {
                             let pairsArray = response.data.idNamePairs;
+                            let tempArray = pairsArray;
+                            if(listWithEmails){
+                                for(let x = 0; x < tempArray.length; x++){
+                                    if(tempArray[x]._id === listWithEmails[x]._id){
+                                        //console.log("id matches");
+                                        if(listWithEmails[x].ownerEmail === auth.user.email){
+                                            //console.log("email matches!");
+                                        }
+                                        else{
+                                            console.log("removing non user lists");
+                                            tempArray.splice(x, 1);
+                                        }
+                                    }
+                                }
+                            }
+                            console.log(tempArray);
+                            pairsArray = tempArray;
                             storeReducer({
                                 type: GlobalStoreActionType.CHANGE_LIST_NAME,
                                 payload: {
