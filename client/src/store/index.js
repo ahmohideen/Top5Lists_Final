@@ -183,19 +183,21 @@ function GlobalStoreContextProvider(props) {
                         response = await api.getTop5ListPairs();
                         if (response.data.success) {
                             let pairsArray = response.data.idNamePairs;
-                            let tempArray = pairsArray;
+                            //let tempArray = pairsArray;
+                            let tempArray = [];//pairsArray;
                             if(listWithEmails){
-                                for(let x = 0; x < tempArray.length; x++){
-                                    if(tempArray[x]._id === listWithEmails[x]._id){
+                                for(let x = 0; x < pairsArray.length; x++){
+                                    //if(tempArray[x]._id === listWithEmails[x]._id){
                                         //console.log("id matches");
-                                        if(listWithEmails[x].ownerEmail === auth.user.email){
-                                            //console.log("email matches!");
-                                        }
-                                        else{
-                                            console.log("removing non user lists");
-                                            tempArray.splice(x, 1);
-                                        }
+                                    if(listWithEmails[x].ownerEmail === auth.user.email){
+                                        //console.log("email matches!");
+                                        tempArray.push(pairsArray[x]);
                                     }
+                                    else{
+                                        console.log("removing non user lists");
+                                        //tempArray.splice(x, 1);
+                                    }
+                                    //}
                                 }
                             }
                             console.log(tempArray);
@@ -256,6 +258,7 @@ function GlobalStoreContextProvider(props) {
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = async function () {
 
+        console.log(auth.user.email);
         let listWithEmails = await store.getAllLists().then((e) => {
             return e
         });
@@ -266,19 +269,20 @@ function GlobalStoreContextProvider(props) {
             //console.log(response.data);
             let pairsArray = response.data.idNamePairs;
             console.log(pairsArray);
-            let tempArray = pairsArray;
+            let tempArray = [];//pairsArray;
             if(listWithEmails){
-                for(let x = 0; x < tempArray.length; x++){
-                    if(tempArray[x]._id === listWithEmails[x]._id){
+                for(let x = 0; x < pairsArray.length; x++){
+                    //if(tempArray[x]._id === listWithEmails[x]._id){
                         //console.log("id matches");
-                        if(listWithEmails[x].ownerEmail === auth.user.email){
-                            //console.log("email matches!");
-                        }
-                        else{
-                            console.log("removing non user lists");
-                            tempArray.splice(x, 1);
-                        }
+                    if(listWithEmails[x].ownerEmail === auth.user.email){
+                        //console.log("email matches!");
+                        tempArray.push(pairsArray[x]);
                     }
+                    else{
+                        console.log("removing non user lists");
+                        //tempArray.splice(x, 1);
+                    }
+                    //}
                 }
             }
             console.log(tempArray);
@@ -362,6 +366,15 @@ function GlobalStoreContextProvider(props) {
             type: GlobalStoreActionType.UNMARK_LIST_FOR_DELETION,
             payload: null
         });
+    }
+
+    store.showErrorModal = function() {
+        let modal = document.getElementById("error-modal");
+        modal.classList.add("is-visible");
+    }
+    store.hideErrorModal = function() {
+        let modal = document.getElementById("error-modal");
+        modal.classList.remove("is-visible");
     }
 
     // THE FOLLOWING 8 FUNCTIONS ARE FOR COORDINATING THE UPDATING
