@@ -14,6 +14,7 @@ import CloseIcon from '@mui/icons-material/HighlightOff';
 function EditToolbar() {
     const { store } = useContext(GlobalStoreContext);
 
+    let enabledButtonClass = "top5-button";
     function handleUndo() {
         store.undo();
     }
@@ -24,20 +25,35 @@ function EditToolbar() {
         store.closeCurrentList();
     }
     let editStatus = false;
-    if (store.isListNameEditActive) {
+    let undo = true;
+    let redo = true;
+    if (store.isItemEditActive) {
         editStatus = true;
-    }  
+    }
+    if(store.canUndo()){
+        undo = false;
+    }
+    if(store.canRedo()){
+        console.log("items to redo...")
+        redo = false;
+    }
     return (
         <div id="edit-toolbar">
-            <Button 
+            <Button
+                disabled={undo}
+                //disabled={undo}
                 id='undo-button'
                 onClick={handleUndo}
+                //className={enabledButtonClass}
                 variant="contained">
                     <UndoIcon />
             </Button>
-            <Button 
+            <Button
+                disabled={redo}
+                //disabled={editStatus}
                 id='redo-button'
                 onClick={handleRedo}
+                //className={enabledButtonClass}
                 variant="contained">
                     <RedoIcon />
             </Button>

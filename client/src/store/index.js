@@ -427,11 +427,13 @@ function GlobalStoreContextProvider(props) {
         }
 
         // NOW MAKE IT OFFICIAL
+        //store.updateToolbarButtons();
         store.updateCurrentList();
     }
 
     store.updateItem = function (index, newItem) {
         store.currentList.items[index] = newItem;
+        //store.updateToolbarButtons();
         store.updateCurrentList();
     }
 
@@ -443,14 +445,17 @@ function GlobalStoreContextProvider(props) {
                 payload: store.currentList
             });
         }
+        //store.updateToolbarButtons();
     }
 
     store.undo = function () {
         tps.undoTransaction();
+        //store.updateToolbarButtons();
     }
 
     store.redo = function () {
         tps.doTransaction();
+        //store.updateToolbarButtons();
     }
 
     store.canUndo = function() {
@@ -475,6 +480,35 @@ function GlobalStoreContextProvider(props) {
             type: GlobalStoreActionType.SET_ITEM_EDIT_ACTIVE,
             payload: null
         });
+    }
+
+    store.disableButton = (id) => {
+        let button = document.getElementById(id);
+        button.classList.add("top5-button-disabled");
+
+    }
+
+    store.enableButton = (id) => {
+        let button = document.getElementById(id);
+        button.classList.remove("top5-button-disabled");
+    }
+
+    store.updateToolbarButtons = () => {
+        console.log("updating buttons...");
+        if (!tps.hasTransactionToUndo()) {
+            store.disableButton("undo-button");
+        }
+        else {
+            store.enableButton("undo-button");
+        }
+
+        if (!tps.hasTransactionToRedo()) {
+            store.disableButton("redo-button");
+        }
+        else {
+            console.log("updating...");
+            store.enableButton("redo-button");
+        }
     }
 
     return (
