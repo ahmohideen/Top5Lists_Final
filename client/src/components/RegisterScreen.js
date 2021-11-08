@@ -12,6 +12,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { GlobalStoreContext } from '../store'
+import ErrorModal from './ErrorModal'
 
 export default function RegisterScreen() {
     const { auth } = useContext(AuthContext);
@@ -27,10 +28,15 @@ export default function RegisterScreen() {
             password: formData.get('password'),
             passwordVerify: formData.get('passwordVerify')
         }, store);
+        if(auth.errMsg){
+            console.log(auth.errMsg);
+            store.showErrorModal();
+        }
     };
 
     return (
             <Container component="main" maxWidth="xs">
+                <ErrorModal/>
                 <CssBaseline />
                 <Box
                     sx={{

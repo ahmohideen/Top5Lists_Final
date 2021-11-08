@@ -10,13 +10,16 @@ export const AuthActionType = {
     LOGIN_USER: "LOGIN_USER",
     LOGOUT_USER: "LOGOUT_USER",
     GET_LOGGED_IN: "GET_LOGGED_IN",
-    REGISTER_USER: "REGISTER_USER"
+    REGISTER_USER: "REGISTER_USER",
+    SET_ERROR: "SET_ERROR",
+    CLEAR_ERROR_MSG: "CLEAR_ERROR_MSG"
 }
 
 function AuthContextProvider(props) {
     const [auth, setAuth] = useState({
         user: null,
-        loggedIn: false
+        loggedIn: false,
+        errMsg: ""
     });
     const history = useHistory();
 
@@ -27,6 +30,14 @@ function AuthContextProvider(props) {
     const authReducer = (action) => {
         const { type, payload } = action;
         switch (type) {
+            case AuthActionType.CLEAR_ERROR_MSG: {
+                return setAuth({
+                    user: null,
+                    loggedIn: false,
+                    errMsg: payload.errMsg
+                })
+            }
+
             case AuthActionType.LOGIN_USER: {
                 return setAuth({
                     user: payload.user,
@@ -53,9 +64,25 @@ function AuthContextProvider(props) {
                     loggedIn: true
                 })
             }
+            case AuthActionType.SET_ERROR: {
+                return setAuth({
+                    user: null,
+                    loggedIn: false,
+                    errMsg: payload.errMsg
+                })
+            }
             default:
                 return auth;
         }
+    }
+
+    auth.clearErrorMessage = () => {
+        authReducer({
+            type: AuthActionType.CLEAR_ERROR_MSG,
+            payload: {
+                errMsg: null
+            }
+        });
     }
 
     auth.getLoggedIn = async function () {
@@ -122,12 +149,34 @@ function AuthContextProvider(props) {
             console.log("ERROR")
             if(err.message.includes("401")){
                 console.log("user does not exist!")//make this an alert!
+                let ermsg = "This user does not exist"
+                authReducer({
+                    type: AuthActionType.SET_ERROR,
+                    payload: {
+                        errMsg: ermsg
+                    }
+                })
+
             }
             if(err.message.includes("402")){
                 console.log("wrong password!")//make this an alert!
+                let ermsg = "This password is incorrect"
+                authReducer({
+                    type: AuthActionType.SET_ERROR,
+                    payload: {
+                        errMsg: ermsg
+                    }
+                })
             }
             if(err.message.includes("400")){
                 console.log("pls enter required fields")//make this an alert!
+                let ermsg = "Please enter the required fields"
+                authReducer({
+                    type: AuthActionType.SET_ERROR,
+                    payload: {
+                        errMsg: ermsg
+                    }
+                })
             }
         }
     }
@@ -185,15 +234,43 @@ function AuthContextProvider(props) {
 
             if(err.message.includes("400")){
                 console.log("you're missing some fields!")//make this an alert!
+                let ermsg = "Please fill in the required fields"
+                authReducer({
+                    type: AuthActionType.SET_ERROR,
+                    payload: {
+                        errMsg: ermsg
+                    }
+                })
             }
             if(err.message.includes("401")){
                 console.log("password too short!")//make this an alert!
+                let ermsg = "Your password is too short"
+                authReducer({
+                    type: AuthActionType.SET_ERROR,
+                    payload: {
+                        errMsg: ermsg
+                    }
+                })
             }
             if(err.message.includes("402")){
                 console.log("pls enter the same password twice")//make this an alert!
+                let ermsg = "Please enter the same password twice"
+                authReducer({
+                    type: AuthActionType.SET_ERROR,
+                    payload: {
+                        errMsg: ermsg
+                    }
+                })
             }
             if(err.message.includes("403")){
                 console.log("an account w this email address already exists")//make this an alert!
+                let ermsg = "An account with this email address already exists"
+                authReducer({
+                    type: AuthActionType.SET_ERROR,
+                    payload: {
+                        errMsg: ermsg
+                    }
+                })
             }
 
         }

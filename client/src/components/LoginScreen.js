@@ -16,6 +16,7 @@ import { useContext } from 'react';
 import AuthContext from '../auth'
 import { GlobalStoreContext } from '../store'
 import Image from '../images/pinkskybackground.jpeg'
+import ErrorModal from './ErrorModal'
 // const auth = require('../auth')
 // const User = require('../models/user-model')
 // const bcrypt = require('bcryptjs')
@@ -40,6 +41,7 @@ export default function LoginScreen() {
     const { auth } = useContext(AuthContext);
     const { store } = useContext(GlobalStoreContext)
 
+  let errorExists = false
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -60,10 +62,17 @@ export default function LoginScreen() {
         email: formData.get('email'),
         password: formData.get('password'),
     }, store);
+    console.log("we tried to log in...")
+    console.log("here's auth: " + auth.errMsg)
+    if(auth.errMsg){
+      console.log(auth.errMsg);
+      store.showErrorModal();
+    }
   };
 
   return (
     <ThemeProvider theme={theme}>
+      <ErrorModal/>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
