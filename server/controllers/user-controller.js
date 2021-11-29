@@ -31,13 +31,13 @@ getLoggedIn = async (req, res) => {
 
 loginUser = async(req, res) => {
     try {
-        const { email, password } = req.body; 
-        if(!email || !password) {
+        const { userName, password } = req.body; 
+        if(!userName || !password) {
             return res.status(400).json({errorMessage: "pls enter all required fields"});
             //can we just make this an alert???
         }
         
-        const existingUser = await User.findOne({ email: email });
+        const existingUser = await User.findOne({ userName: userName });
         if(!existingUser){
             return res.status(401).json({errorMessage: "this user does not exist"});
         }
@@ -63,7 +63,8 @@ loginUser = async(req, res) => {
                     user: {
                         firstName: existingUser.firstName,
                         lastName: existingUser.lastName,
-                        email: existingUser.email
+                        email: existingUser.email,
+                        userName: existingUser.userName
                     }
                 }).send();
         }
@@ -97,8 +98,8 @@ logoutUser = async(req, res) => {
 
 registerUser = async (req, res) => {
     try {
-        const { firstName, lastName, email, password, passwordVerify } = req.body;
-        if (!firstName || !lastName || !email || !password || !passwordVerify) {
+        const { firstName, lastName, email, userName, password, passwordVerify } = req.body;
+        if (!firstName || !lastName || !email || !password || !passwordVerify || !userName) {
             return res
                 .status(400)
                 .json({ errorMessage: "Please enter all required fields." });
@@ -119,6 +120,7 @@ registerUser = async (req, res) => {
         }
 
         const existingUser = await User.findOne({ email: email });
+        //CHANGE THIS^^^ TO USERNAME CHECK!!!
         if (existingUser) {
             return res
                 .status(403)
@@ -133,7 +135,7 @@ registerUser = async (req, res) => {
         const passwordHash = await bcrypt.hash(password, salt);
 
         const newUser = new User({
-            firstName, lastName, email, passwordHash
+            firstName, lastName, email, userName, passwordHash
         });
         const savedUser = await newUser.save();
 
@@ -149,7 +151,8 @@ registerUser = async (req, res) => {
             user: {
                 firstName: savedUser.firstName,
                 lastName: savedUser.lastName,
-                email: savedUser.email
+                email: savedUser.email,
+                username: savedUser.username
             }
         }).send();
     } catch (err) {

@@ -59,7 +59,8 @@ export default function LoginScreen() {
     //     console.log();
     // }
     auth.loginUser({
-        email: formData.get('email'),
+        //email: formData.get('email'),
+        userName: formData.get('userName'),
         password: formData.get('password'),
     }, store);
     console.log("we tried to log in...")
@@ -106,7 +107,7 @@ export default function LoginScreen() {
               Sign in
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-              <TextField
+              {/* <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -114,6 +115,16 @@ export default function LoginScreen() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                autoFocus
+              /> */}
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="userName"
+                label="User Name"
+                name="userName"
+                autoComplete="userName"
                 autoFocus
               />
               <TextField
