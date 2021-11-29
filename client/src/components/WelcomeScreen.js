@@ -2,6 +2,7 @@ import { useContext } from 'react'
 import Button from '@mui/material/Button';
 import AuthContext from '../auth'
 import { GlobalStoreContext } from '../store'
+import { Link } from 'react-router-dom'
 
 export default function WelcomeScreen() {
     const { auth } = useContext(AuthContext);
@@ -29,8 +30,8 @@ export default function WelcomeScreen() {
             <h>This site lets you create top five lists and interact
                 with the lists of other users!
             </h>
-            <Button class="welcome-button">Create Account</Button><br />
-            <Button class="welcome-button">Login</Button><br />
+            <Button class="welcome-button"><Link to='/register/' style={{ textDecoration: 'none', color: "black" }}>Create New Account</Link></Button><br />
+            <Button class="welcome-button"><Link to='/login/' style={{ textDecoration: 'none', color: "black" }}>Login</Link></Button><br />
             <Button class="welcome-button" onClick={handleGuestLogin}>Continue as Guest</Button><br />
         </div>
     )

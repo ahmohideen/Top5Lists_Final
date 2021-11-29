@@ -10,6 +10,9 @@ import Statusbar from './Statusbar'
 import Top5Item from './Top5Item'
 import WorkspaceScreen from './WorkspaceScreen'
 import DeleteModal from './DeleteModal'
+import WelcomeScreen from './WelcomeScreen'
+import TempListCard from './TempListCard'
+import ToolBar from './ToolBar'
 /*
     This serves as a module so that we can import
     all the other components as we wish.
@@ -21,11 +24,14 @@ export {
     EditToolbar, 
     HomeScreen,
     HomeWrapper,
-    ListCard, 
+    ListCard,
+    TempListCard, 
     RegisterScreen,
     LoginScreen,
     SplashScreen,
+    WelcomeScreen,
     Statusbar, 
     Top5Item, 
     WorkspaceScreen,
-    DeleteModal }
+    DeleteModal,
+    ToolBar }
