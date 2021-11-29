@@ -7,7 +7,7 @@
         @author McKilla Gorilla
     */
   --swatch-foundation: #eeeedd;
-  --swatch-primary: #e6e6e6;
+  --swatch-primary: rgb(196, 196, 196);
   --swatch-complement: #e1e4cb;
   --swatch-contrast: #111111;
   --swatch-accent: #669966;
@@ -36,6 +36,10 @@ body {
   height: 100%;
   top: 0%;
   left: 0%;
+}
+
+#list-card-test {
+  
 }
 
 #top5-banner {
