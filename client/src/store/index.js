@@ -286,7 +286,7 @@ function GlobalStoreContextProvider(props) {
                 }
             }
             console.log(tempArray);
-            pairsArray = tempArray;
+            //pairsArray = tempArray;
             storeReducer({
                 type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                 payload: pairsArray
