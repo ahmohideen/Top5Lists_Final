@@ -19,6 +19,9 @@ import HomeIcon from '@mui/icons-material/Home';
 import GroupsIcon from '@mui/icons-material/Groups';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import FunctionsIcon from '@mui/icons-material/Functions';
+import { Link } from 'react-router-dom'
+import { GlobalStoreContext } from '../store'
+import { useContext, useState } from "react";
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -63,6 +66,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const { store } = useContext(GlobalStoreContext);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -83,6 +87,33 @@ export default function PrimarySearchAppBar() {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  const handleAllViewsRoute = (event) => {
+
+  }
+
+  const handleEnterKeyPressed = (event) => {
+    
+    if(event.keyCode == 13){
+      console.log("enter pressed...")
+      console.log('value ', event.target.value);
+      if(event.target.value===""){
+        store.setFilteredPairsToNull();
+        console.log(store.idNamePairs);
+        console.log(store.filteredPairs);
+      }
+      else{
+      store.searchLists(event.target.value);
+      console.log(store.filteredPairs);
+      }
+      
+   }
+  }
+
+  //search is going to call a store method, which can in turn re render lists. 
+  //do we need to know which view we're on? not really, right?
+  //as long as the store method just changes all of them we'll be fine
+
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -163,6 +194,8 @@ export default function PrimarySearchAppBar() {
       <AppBar position="static" elevation={0} sx={{ flexGrow: 1, height: '100px', bgcolor: 'rgb(196, 196, 196)'}} > 
       <Toolbar >
         <Box sx={{ display: { xs: 'none', md: 'flex', color: 'black' } }}>
+        
+        <Link to='/' style={{ textDecoration: 'none', color: "black" }}>
         <IconButton
               size="large"
               edge="end"
@@ -175,6 +208,9 @@ export default function PrimarySearchAppBar() {
               sx={{ fontSize: '75px'}}
               />
             </IconButton>
+          </Link>
+
+            <Link to='/alllistsviews/' style={{ textDecoration: 'none', color: "black" }}>
             <IconButton
               size="large"
               edge="end"
@@ -182,9 +218,11 @@ export default function PrimarySearchAppBar() {
               aria-controls={menuId}
               aria-haspopup="true"
               color="inherit"
+              
             >
               <GroupsIcon sx={{ fontSize: '75px'}}/>
             </IconButton>
+            </Link>
             <IconButton
               size="large"
               edge="end"
@@ -214,6 +252,7 @@ export default function PrimarySearchAppBar() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
+              onKeyDown={handleEnterKeyPressed}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
@@ -243,7 +282,6 @@ export default function PrimarySearchAppBar() {
               aria-label="show more"
               aria-controls={mobileMenuId}
               aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
               color="inherit"
             >
               <MoreIcon />
@@ -251,8 +289,7 @@ export default function PrimarySearchAppBar() {
           </Box>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
+      
     </Box>
   );
 }

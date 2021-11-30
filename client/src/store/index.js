@@ -26,7 +26,9 @@ export const GlobalStoreActionType = {
     UNMARK_LIST_FOR_DELETION: "UNMARK_LIST_FOR_DELETION",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_ITEM_EDIT_ACTIVE: "SET_ITEM_EDIT_ACTIVE",
-    SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE"
+    SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
+    SET_FILTERED_LIST: "SET_FILTERED_LIST",
+    SET_FILTERED_LIST_TO_NULL: "SET_FILTERED_LIST_TO_NULL"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -38,11 +40,13 @@ function GlobalStoreContextProvider(props) {
     // THESE ARE ALL THE THINGS OUR DATA STORE WILL MANAGE
     const [store, setStore] = useState({
         idNamePairs: [],
+        filteredPairs: [],
         currentList: null,
         newListCounter: 0,
         listNameActive: false,
         itemActive: false,
-        listMarkedForDeletion: null
+        listMarkedForDeletion: null,
+        searchActive: false
     });
     const history = useHistory();
 
@@ -58,99 +62,143 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.CHANGE_LIST_NAME: {
                 return setStore({
                     idNamePairs: payload.idNamePairs,
+                    filteredPairs: null,
                     currentList: payload.top5List,
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    searchActive: false
                 });
             }
-            // STOP EDITING THE CURRENT LIST
-            case GlobalStoreActionType.CLOSE_CURRENT_LIST: {
+            case GlobalStoreActionType.SET_FILTERED_LIST: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
+                    filteredPairs: payload,
                     currentList: null,
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    searchActive: true
+                });
+            }
+
+            case GlobalStoreActionType.SET_FILTERED_LIST_TO_NULL: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    filteredPairs: null,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: null,
+                    searchActive: false
+                });
+            }
+
+            // STOP EDITING THE CURRENT LIST
+            case GlobalStoreActionType.CLOSE_CURRENT_LIST: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    filteredPairs: null,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: null,
+                    searchActive: false
                 })
             }
             // CREATE A NEW LIST
             case GlobalStoreActionType.CREATE_NEW_LIST: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
+                    filteredPairs: null,
                     currentList: payload,
                     newListCounter: store.newListCounter + 1,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    searchActive: false
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
             case GlobalStoreActionType.LOAD_ID_NAME_PAIRS: {
                 return setStore({
                     idNamePairs: payload,
+                    filteredPairs: null,
                     currentList: null,
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    searchActive: false
                 });
             }
             // PREPARE TO DELETE A LIST
             case GlobalStoreActionType.MARK_LIST_FOR_DELETION: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
+                    filteredPairs: null,
                     currentList: null,
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: payload
+                    listMarkedForDeletion: payload,
+                    searchActive: false
                 });
             }
             // PREPARE TO DELETE A LIST
             case GlobalStoreActionType.UNMARK_LIST_FOR_DELETION: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
+                    filteredPairs: null,
                     currentList: null,
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    searchActive: false
                 });
             }
             // UPDATE A LIST
             case GlobalStoreActionType.SET_CURRENT_LIST: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
+                    filteredPairs: store.filteredPairs,
                     currentList: payload,
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    searchActive: store.searchActive
                 });
             }
             // START EDITING A LIST ITEM
             case GlobalStoreActionType.SET_ITEM_EDIT_ACTIVE: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
+                    filteredPairs: null,
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: true,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    searchActive: false
                 });
             }
             // START EDITING A LIST NAME
             case GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
+                    filteredPairs: null,
                     currentList: payload,
                     newListCounter: store.newListCounter,
                     isListNameEditActive: true,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    searchActive: false
                 });
             }
             default:
@@ -392,7 +440,7 @@ function GlobalStoreContextProvider(props) {
                     type: GlobalStoreActionType.SET_CURRENT_LIST,
                     payload: top5List
                 });
-                history.push("/top5list/" + top5List._id);
+                //history.push("/top5list/" + top5List._id);
             }
         }
     }
@@ -446,6 +494,32 @@ function GlobalStoreContextProvider(props) {
             });
         }
         //store.updateToolbarButtons();
+    }
+
+    store.searchLists = function (searchWord) {
+        console.log("filtering lists...");
+        console.log(searchWord);
+        console.log(store.idNamePairs);
+        let tempArray = []
+        store.idNamePairs.forEach(element => {
+            if(element.name === searchWord){
+                console.log("we hit the search key")
+                tempArray.push(element);
+            }
+        });
+        //console.log(tempArray)
+        storeReducer({
+            type: GlobalStoreActionType.SET_FILTERED_LIST,
+            payload: tempArray
+        });
+
+    }
+
+    store.setFilteredPairsToNull = function () {
+        storeReducer({
+            type: GlobalStoreActionType.SET_FILTERED_LIST_TO_NULL,
+            payload: []
+        });
     }
 
     store.undo = function () {
