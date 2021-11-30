@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Paper from "@mui/material/Paper";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from "@material-ui/core/Collapse";
+import Top5ItemBox from "./Top5ItemBox"
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -65,11 +66,17 @@ function ListCard(props) {
         setText(event.target.value);
     }
 
-    const handleExpandClick = () => {
+    const handleExpandClick = (event, id) => {
+        store.setCurrentList(id);
         let newExpanded = !expand
         setExpanded(newExpanded);
+        console.log(store.currentList);
       };
-
+    
+    let items = []
+    if(store.currentList){
+        items = store.currentList.items;
+    }
     let cardElement =
         <ListItem
             id={idNamePair._id}
@@ -123,7 +130,7 @@ function ListCard(props) {
     cardElement = 
     <Box className="list-card-test">
     <Paper elevation={0} sx={{ width: "100%",
-    height: "100px", margin: 2, padding: 3, fontSize:'36pt', bgcolor: "#fffff0" }}>
+    height: "100%", margin: 2, padding: 3, fontSize:'36pt', bgcolor: "#fffff0", border: "solid 1px" }}>
         {idNamePair.name}
         <Box sx={{ p: 1,flexGrow: 1 }}>
         <IconButton onClick={(event) => {
@@ -132,20 +139,20 @@ function ListCard(props) {
                         <DeleteIcon style={{fontSize:'30pt'}} />
         </IconButton>
         <IconButton onClick={(event) => {
-                        handleExpandClick()
+                        handleExpandClick(event, idNamePair._id)
                     }} aria-label='expand'>
                         <ExpandMoreIcon style={{fontSize:'30pt'}} />
         </IconButton>
         </Box>
-        
+    <Collapse in={expand} timeout="auto" unmountOnExit sx={{ width: "100%", height: "100%", marginTop:0, paddingTop:0, borderCollapse:"collapse" }} >
+        {/* <Paper disableSpacing elevation={0} sx={{height: "100px", width: "100%", bgcolor: "#fffff0" }}>
+        </Paper> */}
+        <ListItem sx={{width: "100%", height: "100%", bgcolor: "#fffff0", margin: 2, padding: 3}}> <Top5ItemBox items={items} /> </ListItem>
+        {/* hello */}
+    </Collapse>
         
     </Paper>
-    <Collapse in={expand} timeout="auto" unmountOnExit sx={{ width: "102%", height: "600px", marginTop:0, paddingTop:0, borderCollapse:"collapse" }} >
-        {/* <Paper disableSpacing elevation={0} sx={{height: "100px", bgcolor: "#fffff0" }}>
-        </Paper> */}
-        <ListItem sx={{width: "100%", height: "600px", bgcolor: "#fffff0", margin: 2, padding: 3}}> hello </ListItem>
     
-    </Collapse>
     </Box>
     
     
