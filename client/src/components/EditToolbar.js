@@ -39,7 +39,7 @@ function EditToolbar() {
     }
     return (
         <div id="edit-toolbar">
-            <Button
+            {/* <Button
                 disabled={undo}
                 //disabled={undo}
                 id='undo-button'
@@ -63,7 +63,7 @@ function EditToolbar() {
                 onClick={handleClose}
                 variant="contained">
                     <CloseIcon />
-            </Button>
+            </Button> */}
         </div>
     )
 }
