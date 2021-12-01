@@ -15,6 +15,7 @@ import TempListCard from './TempListCard'
 import ToolBar from './ToolBar'
 import Top5ItemBox from './Top5ItemBox'
 import AllListsView from './AllListsView'
+import WorkSpace from './WorkSpace'
 /*
     This serves as a module so that we can import
     all the other components as we wish.
@@ -38,4 +39,5 @@ export {
     DeleteModal,
     ToolBar,
     Top5ItemBox,
-    AllListsView }
+    AllListsView,
+    WorkSpace }

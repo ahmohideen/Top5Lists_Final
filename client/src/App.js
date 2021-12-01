@@ -10,6 +10,7 @@ import {
     LoginScreen,
     Statusbar,
     ToolBar,
+    WorkSpace,
     WorkspaceScreen,
     AllListsView
 } from './components'
@@ -34,6 +35,7 @@ const App = () => {
                     {/* <ToolBar /> */}
                     <Switch>
                         <Route path="/" exact component={HomeWrapper} />
+                        <Route path="/testspace/" exact component={WorkSpace} />
                         <Route path="/register/" exact component={RegisterScreen} />
                         <Route path="/login/" exact component={LoginScreen} />
                         <Route path="/top5list/:id" exact component={WorkspaceScreen} />
