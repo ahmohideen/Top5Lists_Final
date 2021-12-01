@@ -215,6 +215,8 @@ function GlobalStoreContextProvider(props) {
         let response = await api.getTop5ListById(id);
         if (response.data.success) {
             let top5List = response.data.top5List;
+            //this is where we need to check that the list names don't
+            //overlap for a user
             if(newName!==""){
                 top5List.name = newName;
             }
@@ -249,7 +251,7 @@ function GlobalStoreContextProvider(props) {
                                 }
                             }
                             console.log(tempArray);
-                            pairsArray = tempArray;
+                            //pairsArray = tempArray;
                             storeReducer({
                                 type: GlobalStoreActionType.CHANGE_LIST_NAME,
                                 payload: {
