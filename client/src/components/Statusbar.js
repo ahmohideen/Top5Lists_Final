@@ -18,6 +18,7 @@ function Statusbar() {
     
     const handleCreateNewList = () => {
         console.log("making list...")
+        store.createNewList();
     }
     return (
         // <div id="top5-statusbar">
