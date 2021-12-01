@@ -280,10 +280,20 @@ function GlobalStoreContextProvider(props) {
     // THIS FUNCTION CREATES A NEW LIST
     store.createNewList = async function () {
         let newListName = "Untitled" + store.newListCounter;
+        console.log(newListName);
+        console.log(auth.user.email);
+        console.log(auth.user.userName);
         let payload = {
             name: newListName,
-            items: ["?", "?", "?", "?", "?"],
-            ownerEmail: auth.user.email
+            items: ["", "", "", "", ""],
+            ownerEmail: auth.user.email,
+            userName: auth.user.userName,
+            published: false,
+            likes: [],
+            dislikes: [],
+            views: 0,
+            comments: [{}]
+
         };
         const response = await api.createTop5List(payload);
         if (response.data.success) {
@@ -307,6 +317,7 @@ function GlobalStoreContextProvider(props) {
     store.loadIdNamePairs = async function () {
 
         console.log(auth.user.email);
+        console.log(auth.user.userName);
         let listWithEmails = await store.getAllLists().then((e) => {
             return e
         });
