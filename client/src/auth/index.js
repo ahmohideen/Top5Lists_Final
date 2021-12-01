@@ -135,6 +135,8 @@ function AuthContextProvider(props) {
         // })
         // history.push("/");
         // store.loadIdNamePairs();
+
+        console.log(response.data);
         if (response !== null && response.status === 200) {
             authReducer({
                 type: AuthActionType.LOGIN_USER,
