@@ -10,6 +10,7 @@ import Paper from "@mui/material/Paper";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from "@material-ui/core/Collapse";
 import Top5ItemBox from "./Top5ItemBox"
+import { Link } from 'react-router-dom'
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -45,6 +46,11 @@ function ListCard(props) {
             store.setIsListNameEditActive();
         }
         setEditActive(newActive);
+    }
+
+    function handleEditClicked(){
+        //console.log("we should be setting the list here");
+        //store.setCurrentList(id);
     }
 
     async function handleDeleteList(event, id) {
@@ -138,6 +144,7 @@ function ListCard(props) {
                     }} aria-label='delete'>
                         <DeleteIcon style={{fontSize:'30pt'}} />
         </IconButton>
+        <Link to='/'>Edit</Link>
         <IconButton onClick={(event) => {
                         handleExpandClick(event, idNamePair._id)
                     }} aria-label='expand'>

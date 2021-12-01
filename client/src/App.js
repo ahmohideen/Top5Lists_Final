@@ -38,7 +38,7 @@ const App = () => {
                         <Route path="/testspace/" exact component={WorkSpace} />
                         <Route path="/register/" exact component={RegisterScreen} />
                         <Route path="/login/" exact component={LoginScreen} />
-                        <Route path="/top5list/:id" exact component={WorkspaceScreen} />
+                        <Route path="/top5list/:id" exact component={WorkSpace} />
                         <Route path="/alllistsviews/" exact component={AllListsView} />
                     </Switch>
                     <Statusbar />

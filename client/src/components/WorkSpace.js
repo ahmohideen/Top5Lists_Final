@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react'
+import { useState } from 'react'
 import { GlobalStoreContext } from '../store'
 import ToolBar from './ToolBar';
 import List from '@mui/material/List';
@@ -18,7 +19,7 @@ import Stack from '@mui/material/Stack';
 */
 const WorkSpace = () => {
     const { store } = useContext(GlobalStoreContext);
-      
+    const [titleTextField, setTitleTextField] = useState("");
 
 
     let listCard = "";
@@ -26,8 +27,11 @@ const WorkSpace = () => {
        console.log("we're in workspace...")
     }
     let items = ""
+    let title= ""
     if (store.currentList){
+        title = store.currentList.name;
         items = store.currentList.items;
+        console.log(store.currentList);
     }
     else{
         items = ["", "", "", "", ""]
@@ -36,6 +40,21 @@ const WorkSpace = () => {
     //store.saveList()
     //vs
     //store.publishList()
+
+    function handleSaveList(event){
+        //let id = "list-" + idNamePair._id
+        //store.changeListName(id, titleTextField);
+    }
+
+    function handlePublishList(event){
+
+    }
+
+    function changeTitleTextField(event) {
+        let newText = event.target.value;
+        setTitleTextField(newText);
+        console.log(titleTextField);
+    }
     
     // <List>
         <Paper elevation={0} sx={{ 
@@ -55,7 +74,7 @@ const WorkSpace = () => {
             <div id="list-selector-heading">
             <ToolBar />
             </div>
-            hello
+           
             <div id="list-selector-list">
 
                 <Box sx={{ p: 1,flexGrow: 1 }}>
@@ -64,7 +83,8 @@ const WorkSpace = () => {
                         height: "100%",
                         fontSize:'36pt', bgcolor: "#d3d4f8", 
                         border: "solid 1px" }}>
-                    <TextField sx={{bgcolor:"white", width: "30%", marginLeft: "50px", marginTop:"10px"}}></TextField>
+                    <TextField id="workspace-list-title" onChange={changeTitleTextField} sx={{bgcolor:"white", width: "30%", marginLeft: "50px", marginTop:"10px"}}
+                    defaultValue={title}></TextField>
                     
                         <Paper elevation={0} sx={{ 
                         width: "90%",
@@ -181,6 +201,7 @@ const WorkSpace = () => {
                             marginTop: "80px"
                         }}>
                                 <Button disableElevation
+                                onClick={handleSaveList}
                                 sx={{
                                 bgcolor: "#c4c4c4",
                                 width: "250px",
