@@ -17,6 +17,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
+import Button from '@mui/material/Button';
+import AuthContext from '../auth'
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -24,6 +26,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 */
 const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
+    const { auth } = useContext(AuthContext);
 
     const Search = styled('div')(({ theme }) => ({
         position: 'relative',
@@ -73,12 +76,46 @@ const HomeScreen = () => {
     function handleCreateNewList() {
         store.createNewList();
     }
+
+    function buttonClicked() {
+        console.log(store.allLists);
+        store.idNamePairs.map((pair) => (
+            console.log(pair)
+        ))
+    }
+
+    //let allLists =  store.getAllLists();
+    //console.log(allLists);
+
+    //should we filter idnamepairs here, or later??
+    let userName = ""
+    let homeList = []
+    if(store){
+        userName = auth.user.userName;
+        //console.log(userName);
+        let homeIdNamePairs = store.idNamePairs;
+        let allLists = store.allLists;
+        for(let x = 0; x < homeIdNamePairs.length; x++){
+            if(homeIdNamePairs[x]._id === allLists[x]._id){
+                // console.log("match!")
+                // console.log(allLists[x].userName);
+                if(allLists[x].userName === userName){
+                    homeList.push(homeIdNamePairs[x]);
+                    //console.log(homeList);
+                }
+            }
+        }
+        console.log("our filtered home list");
+        console.log(homeList);
+    }
+
     let listCard = "";
     if (store) {
         listCard = 
             <List sx={{ width: '90%', left: '5%'}}>
             {
-                store.idNamePairs.map((pair) => (
+                //store.idNamePairs.map((pair) => (
+                    homeList.map((pair) => (
                     <ListCard
                         key={pair._id}
                         idNamePair={pair}
@@ -92,7 +129,7 @@ const HomeScreen = () => {
         <div id="top5-list-selector">
             <div id="list-selector-heading">
             <ToolBar />
-
+            {/* <Button onClick={buttonClicked}>hello</Button> */}
             <br />
             {/* <Fab 
                 color="primary" 

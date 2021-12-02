@@ -22,7 +22,7 @@ const AllListsView = () => {
     let listCard = "";
     if (store) {
         listCard = 
-            <List sx={{ width: '90%', left: '5%', bgcolor: "pink"}}>
+            <List sx={{ width: '90%', left: '5%'}}>
             {
                 store.idNamePairs.map((pair) => (
                     <ListCard
@@ -40,7 +40,7 @@ const AllListsView = () => {
                 console.log("filtered pairs...")
                 console.log(store.filteredPairs);
                 listCard = 
-                <List sx={{ width: '90%', left: '5%', bgcolor: "pink"}}>
+                <List sx={{ width: '90%', left: '5%'}}>
                 {
                     store.filteredPairs.map((pair) => (
                         <ListCard
@@ -56,7 +56,7 @@ const AllListsView = () => {
             }
             else{
                 listCard = 
-            <List sx={{ width: '90%', left: '5%', bgcolor: "pink"}}>
+            <List sx={{ width: '90%', left: '5%'}}>
             {
                 store.idNamePairs.map((pair) => (
                     <ListCard
