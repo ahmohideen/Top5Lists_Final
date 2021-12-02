@@ -50,7 +50,7 @@ body {
   height: 10%;
   float: left;
   background-image: linear-gradient(to bottom, #b8b808, #636723);
-  color: white;
+  color: rgb(224, 224, 224);
   font-size: 48pt;
   border-color: black;
   border-width: 2px;
