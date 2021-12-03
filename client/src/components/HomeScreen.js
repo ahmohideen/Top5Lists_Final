@@ -105,8 +105,8 @@ const HomeScreen = () => {
                 }
             }
         }
-        console.log("our filtered home list");
-        console.log(homeList);
+        //console.log("our filtered home list");
+        //console.log(homeList);
     }
 
     let listCard = "";
