@@ -42,17 +42,28 @@ updateTop5List = async (req, res) => {
         })
     }
 
-    Top5List.findOne({ _id: req.params.id }, (err, top5List) => {
-        console.log("top5List found: " + JSON.stringify(top5List));
-        if (err) {
-            return res.status(404).json({
-                err,
-                message: 'Top 5 List not found!',
-            })
-        }
-
+    const top5List = await Top5List.findOne({ _id: req.params.id })
+    if(!top5List){
+        return res.status(404).json({
+            err,
+            message: 'Top 5 List not found!',
+        })
+    }
+    console.log("top5List found: " + JSON.stringify(top5List));
+    console.log("BODY", body);
         top5List.name = body.name
         top5List.items = body.items
+        if(body.views){
+            top5List.views = body.views
+        }
+        if(body.likes){
+            top5List.likes = body.likes
+        }
+        if(body.dislike){
+            top5List.dislike = body.dislike
+        }
+
+        
         top5List
             .save()
             .then(() => {
@@ -70,8 +81,9 @@ updateTop5List = async (req, res) => {
                     message: 'Top 5 List not updated!',
                 })
             })
-    })
+        
 }
+
 
 deleteTop5List = async (req, res) => {
     Top5List.findById({ _id: req.params.id }, (err, top5List) => {

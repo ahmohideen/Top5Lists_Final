@@ -497,6 +497,8 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
+
+
     store.addMoveItemTransaction = function (start, end) {
         let transaction = new MoveItem_Transaction(store, start, end);
         tps.addTransaction(transaction);
@@ -536,12 +538,19 @@ function GlobalStoreContextProvider(props) {
         //store.updateToolbarButtons();
         store.updateCurrentList();
     }
-    store.updateViews = function () {
-        let x = store.currentList.views
-        store.currentList.views = x+1;
-        console.log(store.currentList.views);
+    store.updateViews = function (list) {
+        let x = list.views
+        list.views = x+1;
         //store.updateToolbarButtons();
-        store.updateCurrentList();
+        store.updateListById(list._id, list);
+
+    }
+
+    store.updateName = function (list, name) {
+        list.name = name;
+        //store.updateToolbarButtons();
+        store.updateListById(list._id, list);
+
     }
 
     store.updateCurrentList = async function () {
@@ -555,18 +564,63 @@ function GlobalStoreContextProvider(props) {
         //store.updateToolbarButtons();
     }
 
+    store.updateItems = function (itemsArray) {
+        store.currentList.items = itemsArray;
+        //console.log(store.currentList.views);
+        //store.updateToolbarButtons();
+        store.updateCurrentList();
+    }
+
+    store.updateLikes = function (list) {
+        let uName = auth.user.userName;
+        if(list.likes.includes(uName)){
+            //do nothing
+        }
+        else if(list.dislike.includes(uName)){
+            let index = list.dislike.indexOf(uName);
+            list.dislike.splice(index, 1);
+            list.likes.push(uName);
+        }
+        else{
+            list.likes.push(uName);
+        }
+        store.updateListById(list._id, list);
+    }
+
+    store.updateDislikes = function (list) {
+        let uName = auth.user.userName;
+        if(list.dislike.includes(uName)){
+            //do nothing
+        }
+        else if(list.likes.includes(uName)){
+            let index = list.likes.indexOf(uName);
+            list.likes.splice(index, 1);
+            list.dislike.push(uName);
+        }
+        else{
+            list.dislike.push(uName);
+        }
+        console.log(list.dislike);
+        console.log(list.likes);
+        store.updateListById(list._id, list);
+    }
 
 
-    store.updateListById = async function (view, id, list) {
-        //updateTop5ListByIdWithView
-        //updateTop5ListByIdWithView
-        const response = await api.updateTop5ListByIdWithView(id, list);
+
+    store.updateListById = async function (id, list) {
+        console.log(list);
+        const response = await api.updateTop5ListById(id, list);
         if (response.data.success) {
-            console.log("list updated")
-            console.log(response.data);
+            // storeReducer({
+            //     type: GlobalStoreActionType.SET_CURRENT_LIST,
+            //     payload: store.currentList
+            // });
         }
         
     }
+    
+
+
 
     store.searchLists = function (searchWord) {
         console.log("filtering lists...");

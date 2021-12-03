@@ -16,6 +16,9 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { styled } from "@mui/material/styles";
 import  CommentBox  from './CommentBox';
+import Button from "@mui/material/Button";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -37,6 +40,7 @@ function ListCard(props) {
     let views = 0
     let numLikes = 0
     let numDislikes = 0
+    let thisList = {}
     if(store){
         //we're going to get all the info from all the lists for this view
         store.allLists.forEach(element => {
@@ -47,9 +51,31 @@ function ListCard(props) {
                 views = element.views;
                 numLikes = element.likes.length;
                 numDislikes = element.dislike.length;
+                thisList = element;
             }
         });
     }
+
+    let icon = (
+        <IconButton
+          onClick={(event) => {
+            handleExpandClick(event, idNamePair._id);
+          }}
+        >
+          <ExpandMoreIcon style={{ fontSize: "20pt" }} />
+        </IconButton>
+      );
+      if (expand === true) {
+        icon = (
+          <IconButton
+            onClick={(event) => {
+              handleUnexpandClick(event);
+            }}
+          >
+            <ExpandLessIcon style={{ fontSize: "20pt" }} />
+          </IconButton>
+        );
+      }
     //we can...use id name pairs to filter lists, and render them
 
     //OKAY
@@ -82,7 +108,23 @@ function ListCard(props) {
         //console.log("we should be setting the list here");
         //store.setCurrentList(id);
         console.log(idNamePair._id);
-        store.setCurrentList(idNamePair._id);
+        //store.setCurrentListWithHistory
+        //store.setCurrentListWithHistory(idNamePair._id);
+    }
+
+    function likeButtonClicked(){
+        //what is the logic of the like button?
+        //the same user can't like something twice
+        //and if they like something, and they are in the dislike list, they must be removed
+        console.log("like button pressed!")
+        console.log(thisList);
+        store.updateLikes(thisList);
+
+    }
+
+    function dislikeButtonClicked(){
+        //therefore, if they dislike something and they're in the like list, they must be removed
+        store.updateDislikes(thisList);
     }
 
     async function handleDeleteList(event, id) {
@@ -104,26 +146,32 @@ function ListCard(props) {
         setText(event.target.value);
     }
 
+    //time for CONDITIONAL RENDERING BITCHES
     const handleExpandClick = (event, id) => {
-        store.setCurrentList(id); //problem with doing it this way!
-        //cant open multiple lists!
-        //everytime we open a list, the view count goes up-->
-        //store.updatelist(id, view+1)
+        store.setCurrentList(id); //problem with doing it this way! - cant open multiple lists!
         let newExpanded = !expand
         setExpanded(newExpanded);
-        console.log(store.currentList);
-        console.log(store.allLists);
+        // console.log(store.currentList);
+        // console.log(store.allLists);
 
-        if(store.currentList){
-            // console.log(store.currentList);
-            // store.currentList.views = store.currentList.views+1;
-            // console.log(store.currentList.views);
-            // console.log(store.currentList);
-            //store.updateListById(id, store.currentList);
-            //store.updateViews();
-        }
+        // if(store.currentList){
+        //     let tempList = store.currentList
+        //     tempList.views = tempList.views+1;
+        //     console.log(tempList);
+        //     store.updateListById(id, tempList);
+        // }
         
 
+    };
+
+    const handleUnexpandClick = (event) => {
+        //store.setCurrentList(id); //problem with doing it this way! - cant open multiple lists!
+        store.updateViews(thisList);
+        let newExpanded = !expand;
+        setExpanded(newExpanded);
+        // if(store.currentList){
+        //     store.updateViews();
+        // }
       };
 
     const Item = styled(Paper)(({ theme }) => ({
@@ -238,6 +286,7 @@ function ListCard(props) {
               sx={{ bgcolor: "#fffff0", boxShadow: "none", fontWeight: "bold", fontSize: "24pt" }}
             >
               {idNamePair.name} by {userName}
+              {/* <Button onClick={buttonClicked(idNamePair._id)}></Button> */}
             </Item>
           </Grid>
           <Grid item xs={6}>
@@ -246,7 +295,7 @@ function ListCard(props) {
           <Grid item xs={1}>
             <Item sx={{ bgcolor: "#fffff0", boxShadow: "none" }}>
               <IconButton>
-                <ThumbUpIcon style={{ fontSize: "40pt" }} />
+                <ThumbUpIcon style={{ fontSize: "40pt" }} onClick={likeButtonClicked} />
                 {numLikes}
               </IconButton>
             </Item>
@@ -254,7 +303,7 @@ function ListCard(props) {
           <Grid item xs={1}>
             <Item sx={{ bgcolor: "#fffff0", boxShadow: "none" }}>
               <IconButton>
-                <ThumbDownIcon style={{ fontSize: "40pt" }} />
+                <ThumbDownIcon style={{ fontSize: "40pt" }}  onClick={dislikeButtonClicked}/>
                 {numDislikes}
               </IconButton>
             </Item>
@@ -282,11 +331,7 @@ function ListCard(props) {
           </Grid>
           <Grid item xs={2}>
             <Item sx={{ bgcolor: "#fffff0", boxShadow: "none" }}>
-              <IconButton onClick={(event) => {
-                        handleExpandClick(event, idNamePair._id)
-                    }}>
-                <ExpandMoreIcon style={{ fontSize: "30pt" }} />
-              </IconButton>
+              {icon}
             </Item>
           </Grid>
         </Grid>
