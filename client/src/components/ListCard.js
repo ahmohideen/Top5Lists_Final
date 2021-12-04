@@ -311,7 +311,9 @@ function ListCard(props) {
           <Grid item xs={2}>
             <Item sx={{ bgcolor: "#fffff0", boxShadow: "none" }}>
               <IconButton>
-                <DeleteIcon style={{ fontSize: "40pt" }} />
+                <DeleteIcon style={{ fontSize: "40pt" }} onClick={(event) => {
+                        handleDeleteList(event, idNamePair._id)
+                    }}/>
               </IconButton>
             </Item>
           </Grid>
