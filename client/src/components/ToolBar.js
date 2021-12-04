@@ -233,6 +233,8 @@ export default function PrimarySearchAppBar() {
             >
               <PersonOutlineIcon sx={{ fontSize: '75px'}}/>
             </IconButton>
+
+            <Link to='/aggregatelistsview/' style={{ textDecoration: 'none', color: "black" }}>
             <IconButton
               size="large"
               edge="end"
@@ -243,6 +245,10 @@ export default function PrimarySearchAppBar() {
             >
               <FunctionsIcon sx={{ fontSize: '75px'}}/>
             </IconButton>
+            </Link>
+            
+
+
           </Box>
 
           <Search sx={{ minWidth: '500px', color: 'black' }}>

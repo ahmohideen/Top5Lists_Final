@@ -29,7 +29,8 @@ export const GlobalStoreActionType = {
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     SET_FILTERED_LIST: "SET_FILTERED_LIST",
     SET_FILTERED_LIST_TO_NULL: "SET_FILTERED_LIST_TO_NULL",
-    SET_ALL_LISTS: "SET_ALL_LISTS"
+    SET_ALL_LISTS: "SET_ALL_LISTS",
+    SET_AGGREGATE_LISTS: "SET_AGGREGATE_LISTS"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -49,9 +50,10 @@ function GlobalStoreContextProvider(props) {
         listMarkedForDeletion: null,
         searchActive: false,
         allLists: [],
+        aggregateLists: []
         //allLists: []
         //userLists: []
-        //aggregateLists: []
+        //
     });
     const history = useHistory();
 
@@ -74,7 +76,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     searchActive: false,
-                    allLists: store.allLists
+                    allLists: store.allLists,
+                    aggregateLists: store.aggregateLists
                 });
             }
             case GlobalStoreActionType.SET_FILTERED_LIST: {
@@ -87,7 +90,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     searchActive: true,
-                    allLists: store.allLists
+                    allLists: store.allLists,
+                    aggregateLists: store.aggregateLists
                 });
             }
 
@@ -101,7 +105,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     searchActive: false,
-                    allLists: store.allLists
+                    allLists: store.allLists,
+                    aggregateLists: store.aggregateLists
                 });
             }
 
@@ -116,7 +121,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     searchActive: false,
-                    allLists: store.allLists
+                    allLists: store.allLists,
+                    aggregateLists: store.aggregateLists
                 })
             }
             // CREATE A NEW LIST
@@ -130,7 +136,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     searchActive: false,
-                    allLists: store.allLists
+                    allLists: store.allLists,
+                    aggregateLists: store.aggregateLists
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -144,7 +151,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     searchActive: false,
-                    allLists: payload.allLists
+                    allLists: payload.allLists,
+                    aggregateLists: store.aggregateLists
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -158,7 +166,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: payload,
                     searchActive: false,
-                    allLists: store.allLists
+                    allLists: store.allLists,
+                    aggregateLists: store.aggregateLists
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -172,7 +181,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     searchActive: false,
-                    allLists: store.allLists
+                    allLists: store.allLists,
+                    aggregateLists: store.aggregateLists
                 });
             }
             // UPDATE A LIST
@@ -186,7 +196,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     searchActive: store.searchActive,
-                    allLists: store.allLists
+                    allLists: store.allLists,
+                    aggregateLists: store.aggregateLists
                 });
             }
             // START EDITING A LIST ITEM
@@ -200,7 +211,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: true,
                     listMarkedForDeletion: null,
                     searchActive: false,
-                    allLists: store.allLists
+                    allLists: store.allLists,
+                    aggregateLists: store.aggregateLists
                 });
             }
 
@@ -214,7 +226,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     searchActive: false,
-                    allLists: payload
+                    allLists: payload,
+                    aggregateLists: store.aggregateLists
                 });
             }
 
@@ -230,9 +243,26 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     searchActive: false,
-                    allLists: store.allLists
+                    allLists: store.allLists,
+                    aggregateLists: store.aggregateLists
                 });
             }
+
+            case GlobalStoreActionType.SET_AGGREGATE_LISTS: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    filteredPairs: null,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: null,
+                    searchActive: false,
+                    allLists: store.allLists,
+                    aggregateLists: payload
+                });
+            }
+
             default:
                 return store;
         }
@@ -350,14 +380,14 @@ function GlobalStoreContextProvider(props) {
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = async function () {
 
-        console.log(auth.user.email);
-        console.log(auth.user.userName);
+        // console.log(auth.user.email);
+        // console.log(auth.user.userName);
         let listWithEmails = await store.getAllLists().then((e) => {
             return e
         });
-        console.log(listWithEmails);
-        console.log("looking at allLists")
-        console.log(store.allLists);
+        // console.log(listWithEmails);
+        // console.log("looking at allLists")
+        // console.log(store.allLists);
 
         const response = await api.getTop5ListPairs();
         if (response.data.success) {
@@ -401,12 +431,12 @@ function GlobalStoreContextProvider(props) {
         const response = await api.getAllTop5Lists();
         if (response.data.success) {
             let allLists = response.data.data;
-            console.log("in store");
-            console.log(allLists);
-            storeReducer({
-                type: GlobalStoreActionType.SET_ALL_LISTS,
-                payload: allLists
-            });
+            // console.log("in store");
+            // console.log(allLists);
+            // storeReducer({
+            //     type: GlobalStoreActionType.SET_ALL_LISTS,
+            //     payload: allLists
+            // });
             
             return allLists;
         }
@@ -553,6 +583,10 @@ function GlobalStoreContextProvider(props) {
 
     }
 
+    store.publishList = function(list) {
+
+    }
+
     store.updateCurrentList = async function () {
         const response = await api.updateTop5ListById(store.currentList._id, store.currentList);
         if (response.data.success) {
@@ -618,7 +652,35 @@ function GlobalStoreContextProvider(props) {
         }
         
     }
+
+
+
+
     
+
+    //THIS IS GOING TO BE WHERE WE DO AGGREGATE LIST OPERATIONS
+    store.loadAggregateLists = async function () {
+        //const response = await api.getAllTop5Lists();
+        const response = await api.getAggregateLists();
+        if (response.data.success) {
+            console.log(response.data.data);
+            let responseList = response.data.data;
+            storeReducer({
+                type: GlobalStoreActionType.SET_AGGREGATE_LISTS,
+                payload: responseList
+            });
+        }
+
+        console.log(store.aggregateLists)
+    }
+
+
+
+
+
+
+
+
 
 
 
