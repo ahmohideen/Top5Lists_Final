@@ -12,7 +12,8 @@ import {
     ToolBar,
     WorkSpace,
     WorkspaceScreen,
-    AllListsView
+    AllListsView,
+    AggregateListsView
 } from './components'
 
 /*
@@ -40,6 +41,7 @@ const App = () => {
                         <Route path="/login/" exact component={LoginScreen} />
                         <Route path="/top5list/:id" exact component={WorkSpace} />
                         <Route path="/alllistsviews/" exact component={AllListsView} />
+                        <Route path="/aggregatelistsview/" exact component={AggregateListsView} />
                     </Switch>
                     <Statusbar />
                 </GlobalStoreContextProvider>
