@@ -16,6 +16,9 @@ import ToolBar from './ToolBar'
 import Top5ItemBox from './Top5ItemBox'
 import AllListsView from './AllListsView'
 import WorkSpace from './WorkSpace'
+import CommentBox from './CommentBox'
+import AggregateListsView from './AggregateListsView'
+import AggregateListCard from './AggregateListCard'
 /*
     This serves as a module so that we can import
     all the other components as we wish.
@@ -40,4 +43,7 @@ export {
     ToolBar,
     Top5ItemBox,
     AllListsView,
-    WorkSpace }
+    WorkSpace,
+    CommentBox,
+    AggregateListsView,
+    AggregateListCard }
