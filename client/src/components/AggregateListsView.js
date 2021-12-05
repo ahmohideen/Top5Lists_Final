@@ -3,6 +3,7 @@ import { GlobalStoreContext } from '../store'
 import ToolBar from './ToolBar';
 import List from '@mui/material/List';
 import ListCard from './ListCard.js'
+import AggregateListCard from './AggregateListCard';
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -21,18 +22,18 @@ const AggregateListsView = () => {
 
     let listCard = "";
     if (store) {
-        //listCard = 
-            // <List sx={{ width: '90%', left: '5%'}}>
-            // {
-            //     store.aggregateLists.map((element) => (
-            //         <AggregateListCard
-            //             key={element._id}
-            //             list={element}
-            //             selected={false}
-            //         />
-            //     ))
-            // }
-            // </List>;
+        listCard = 
+            <List sx={{ width: '90%', left: '5%'}}>
+            {
+                store.aggregateLists.map((element) => (
+                    <AggregateListCard
+                        key={element._id}
+                        list={element}
+                        selected={false}
+                    />
+                ))
+            }
+            </List>;
 
     }
 
@@ -41,7 +42,7 @@ const AggregateListsView = () => {
         <div id="top5-list-selector">
             <div id="list-selector-heading">
             <ToolBar />
-            AGGREGATE LISTS!!!
+           
             <br />
             {/* <Fab 
                 color="primary" 

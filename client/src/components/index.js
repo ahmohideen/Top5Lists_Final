@@ -19,6 +19,7 @@ import WorkSpace from './WorkSpace'
 import CommentBox from './CommentBox'
 import AggregateListsView from './AggregateListsView'
 import AggregateListCard from './AggregateListCard'
+import UserListsView from './UserListsView'
 /*
     This serves as a module so that we can import
     all the other components as we wish.
@@ -46,4 +47,5 @@ export {
     WorkSpace,
     CommentBox,
     AggregateListsView,
-    AggregateListCard }
+    AggregateListCard,
+    UserListsView }
