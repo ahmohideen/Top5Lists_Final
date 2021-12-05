@@ -3,6 +3,7 @@ import { GlobalStoreContext } from '../store'
 import ToolBar from './ToolBar';
 import List from '@mui/material/List';
 import ListCard from './ListCard.js'
+import AuthContext from '../auth'
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -10,6 +11,7 @@ import ListCard from './ListCard.js'
 */
 const AllListsView = () => {
     const { store } = useContext(GlobalStoreContext);
+    const { auth } = useContext(AuthContext);
       
     useEffect(() => {
         console.log("switched to all lists view")
@@ -21,10 +23,28 @@ const AllListsView = () => {
     }
     let listCard = "";
     if (store) {
+
+        let aList = [];
+        let userName = auth.user.userName;
+        //console.log(userName);
+        let homeIdNamePairs = store.idNamePairs;
+        let allLists = store.allLists;
+        for(let x = 0; x < homeIdNamePairs.length; x++){
+            if(homeIdNamePairs[x]._id === allLists[x]._id){
+                // console.log("match!")
+                // console.log(allLists[x].userName);
+                if(allLists[x].published === true){
+                    aList.push(homeIdNamePairs[x]);
+                    //console.log(homeList);
+                }
+            }
+        }
+
+
         listCard = 
             <List sx={{ width: '90%', left: '5%'}}>
             {
-                store.idNamePairs.map((pair) => (
+                aList.map((pair) => (
                     <ListCard
                         key={pair._id}
                         idNamePair={pair}
@@ -58,7 +78,7 @@ const AllListsView = () => {
                 listCard = 
             <List sx={{ width: '90%', left: '5%'}}>
             {
-                store.idNamePairs.map((pair) => (
+                aList.map((pair) => (
                     <ListCard
                         key={pair._id}
                         idNamePair={pair}
