@@ -449,6 +449,8 @@ function GlobalStoreContextProvider(props) {
 
 
 
+    //when we sort lists, we'll have to update id names pairs too...
+    //we can use a store reducer for that
 
 
     // THE FOLLOWING 5 FUNCTIONS ARE FOR COORDINATING THE DELETION
@@ -480,6 +482,9 @@ function GlobalStoreContextProvider(props) {
     store.deleteList = async function (listToDelete) {
         let response = await api.deleteTop5ListById(listToDelete._id);
         if (response.data.success) {
+            //when a list is deleted, its votes must be removed from the 
+            //corresponding aggregate list
+
             store.loadIdNamePairs();
             history.push("/");
         }
@@ -583,9 +588,13 @@ function GlobalStoreContextProvider(props) {
 
     }
 
-    store.publishList = function(list) {
-
+    store.addComment = function (comment) {
+        let newComment = {"userName": auth.user.userName, "comment": comment}
+        store.currentList.comments.push(newComment);
+        //console.log(store.currentList);
+        store.updateCurrentList();
     }
+
 
     store.updateCurrentList = async function () {
         const response = await api.updateTop5ListById(store.currentList._id, store.currentList);
@@ -618,10 +627,12 @@ function GlobalStoreContextProvider(props) {
         else{
             list.likes.push(uName);
         }
-        store.updateListById(list._id, list);
+        store.currentList = list;
+        store.updateCurrentList();
+        //store.updateListById(list._id, list);
     }
 
-    store.updateDislikes = function (list) {
+    store.updateDislikes = function (list ) {
         let uName = auth.user.userName;
         if(list.dislike.includes(uName)){
             //do nothing
@@ -634,9 +645,36 @@ function GlobalStoreContextProvider(props) {
         else{
             list.dislike.push(uName);
         }
-        console.log(list.dislike);
-        console.log(list.likes);
-        store.updateListById(list._id, list);
+        
+        store.currentList = list;
+        store.updateCurrentList();
+
+        //store.updateListById(list._id, list);
+    }
+
+
+    store.publishList = async function (list) {
+        let uName = auth.user.userName;
+        let publish = true
+        store.allLists.forEach(element => {
+            if(element.uName === list.uName){
+                if(element.name === list.name){
+                    console.log("we cant publish this list yet, the names match")
+                    publish = false
+                }
+            }
+        });
+        if(publish){
+            list.published = true;
+            //console.log(list)
+            store.updateListById(list._id, list);
+            history.push("/");
+
+
+            //aight, so this is where we have to check aggregate lists
+            //if an aggregate with this name does not exist --> create it
+            //if it does --> tally up the votes and then update that aggregate list
+        }
     }
 
 
@@ -654,24 +692,112 @@ function GlobalStoreContextProvider(props) {
     }
 
 
+    //lets think about sorting
+    store.sortList = function () {
+
+    }
+
 
 
     
 
     //THIS IS GOING TO BE WHERE WE DO AGGREGATE LIST OPERATIONS
+    //LOAD, CHECK IF LIST EXISTS, UPDATE ITEM+VOTES, UPDATE BY ID, UPDATE LIKES AND DISLIKES
+    //UPDATE VIEWS, UPDATE COMMENTS
     store.loadAggregateLists = async function () {
         //const response = await api.getAllTop5Lists();
         const response = await api.getAggregateLists();
         if (response.data.success) {
-            console.log(response.data.data);
+            //console.log(response.data.data);
             let responseList = response.data.data;
             storeReducer({
                 type: GlobalStoreActionType.SET_AGGREGATE_LISTS,
                 payload: responseList
             });
         }
-
         console.log(store.aggregateLists)
+    }
+
+    store.checkAggregateListExists = function(list){
+        let existingList = [];
+        store.aggregateLists.forEach(element => {
+            if(element.name === list.name){
+                //match
+                existingList = element;
+            }
+            else{
+                //does not exist in aggregate list database
+            }
+        });
+        return existingList;
+    }
+
+    store.updateAggregateListItems = function(items, aggregateList){
+        let pointIndex = [5, 4, 3, 2, 1];
+        let aItems = aggregateList.items;
+        let aVotes = aggregateList.votes;
+        items.forEach(element => {
+            if(aItems.includes(element)){
+                let aItemIndex = aItems.indexOf(element);
+                aVotes[aItemIndex] = aVotes[aItemIndex] + pointIndex[items.indexOf(element)]
+            }
+            else{
+                //we should add it to the aggregate lists' items, right?
+                //and then we can just display the first 5 items in aggregate list card
+                //aItems.push(element);
+            }
+        });
+        console.log(aItems);
+        aggregateList.items = aItems;
+        aggregateList.votes = aVotes;
+        //store.updateAggregateList(aggregateList._id, aggregateList)
+    }
+
+    store.updateAggregateLikes = function (list) {
+        let uName = auth.user.userName;
+        if(list.likes.includes(uName)){
+            //do nothing
+        }
+        else if(list.dislike.includes(uName)){
+            let index = list.dislike.indexOf(uName);
+            list.dislike.splice(index, 1);
+            list.likes.push(uName);
+        }
+        else{
+            list.likes.push(uName);
+        }
+        console.log(list);
+        store.updateAggregateList(list._id, list);
+    }
+
+    store.updateAggregateDislikes = function (list ) {
+        let uName = auth.user.userName;
+        if(list.dislike.includes(uName)){
+            //do nothing
+        }
+        else if(list.likes.includes(uName)){
+            let index = list.likes.indexOf(uName);
+            list.likes.splice(index, 1);
+            list.dislike.push(uName);
+        }
+        else{
+            list.dislike.push(uName);
+        }
+        console.log(list);
+        store.updateAggregateList(list._id, list);
+    }
+
+    store.updateAggregateList = async function (id, list) {
+        const response = await api.updateAggregateList(id, list);
+        if (response.data.success) {
+            console.log("yay")
+            store.loadAggregateLists();
+            // storeReducer({
+            //     type: GlobalStoreActionType.SET_AGGREGATE_LISTS,
+            //     payload: list
+            // });
+        }
+        
     }
 
 
@@ -684,17 +810,28 @@ function GlobalStoreContextProvider(props) {
 
 
 
-    store.searchLists = function (searchWord) {
+    store.searchLists = function (searchWord, view) {
         console.log("filtering lists...");
         console.log(searchWord);
         console.log(store.idNamePairs);
         let tempArray = []
-        store.idNamePairs.forEach(element => {
-            if(element.name === searchWord){
-                console.log("we hit the search key")
-                tempArray.push(element);
-            }
-        });
+        if(view==="/alllistsviews/" || view===""){
+            store.idNamePairs.forEach(element => {
+                if(element.name.toLowerCase() === searchWord.toLowerCase()){
+                    console.log("we hit the search key")
+                    tempArray.push(element);
+                }
+            });
+        }
+        if(view==="/userlistview/"){
+            store.allLists.forEach(element => {
+                if(element.userName.toLowerCase() === searchWord.toLowerCase()){
+                    console.log("we hit the search key (username)")
+                    tempArray.push(element);
+                }
+            });
+        }
+        
         //console.log(tempArray)
         storeReducer({
             type: GlobalStoreActionType.SET_FILTERED_LIST,

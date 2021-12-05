@@ -3,6 +3,7 @@ import { GlobalStoreContext } from '../store'
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
+import List from '@mui/material/List';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -282,6 +283,7 @@ function ListCard(props) {
     let editItem = <Item sx={{ bgcolor: "#fffff0", boxShadow: "none", fontSize:"16pt", marginRight:"100px" }}>
     <Link to={'/top5list/'+idNamePair._id} onClick={handleEditClicked} >Edit</Link>
     </Item>
+    let commentBox = "";
 
     let color = "#fffff0"
     if(published===true){
@@ -289,6 +291,7 @@ function ListCard(props) {
         editItem = <Item sx={{ bgcolor: color, boxShadow: "none", fontSize:"16pt", marginLeft:"50px" }}>
         Published: {date}
         </Item>
+        commentBox = <CommentBox color={color}/>
         
     }
 
@@ -365,12 +368,23 @@ function ListCard(props) {
         <Collapse in={expand} timeout="auto" unmountOnExit sx={{ width: "100%", height: "100%", marginTop:0, paddingTop:0, borderCollapse:"collapse" }} >
         {/* <Paper disableSpacing elevation={0} sx={{height: "100px", width: "100%", bgcolor: "#fffff0" }}>
         </Paper> */}
-        <Grid container spacing={2}>
-        <Grid item >
-            <ListItem sx={{width: "1500px", height: "100%", bgcolor: color, margin: 2, padding: 3}}> <Top5ItemBox items={items} /> </ListItem>
+        <Grid container spacing={0}>
+        <Grid item xs={6}>
+            <ListItem sx={{width: "1500px", height: "100%", bgcolor: "transparent", margin: 2, padding: 3}}> <Top5ItemBox items={items} /> </ListItem>
         </Grid>
-        <Grid item >
-            {/* <CommentBox ></CommentBox> */}
+        <Grid item xs={6}>
+        <List sx={{
+        width: '100%',
+        maxWidth: 1000,
+        bgcolor: color,
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: 500,
+        marginTop: "40px",
+        '& ul': { padding: 0 },
+      }}>
+        <ListItem> {commentBox} </ListItem>
+        </List>
         </Grid>
         </Grid>
         {/* hello */}
