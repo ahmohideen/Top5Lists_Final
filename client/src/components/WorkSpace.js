@@ -112,6 +112,12 @@ const WorkSpace = () => {
         if(dataArray.includes("")){
             //button should be disabled
             //since that's not working, guess we'll just check in here lol
+            
+        }
+        else{
+            store.updateItems(dataArray);
+            store.updateName(store.currentList, listTitle);
+            store.publishList(store.currentList);
         }
         publishCondition = false
         //when we publish a list, we-->
@@ -295,6 +301,7 @@ const WorkSpace = () => {
                                 }}> Save</Button>
                                 <Button disabledElevation
                                 disabled={publishCondition}
+                                onClick={handlePublishList}
                                 //disabled={published}
                                 sx={{
                                     bgcolor: "#c4c4c4",
