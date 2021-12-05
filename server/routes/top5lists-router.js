@@ -18,4 +18,5 @@ router.get('/logout', UserController.logoutUser)
 router.get('/loggedIn', UserController.getLoggedIn)
 
 router.get('/aggregatelists', auth.verify, AggregateListController.getAggregateLists)
+router.put('/aggregatelists/:id', auth.verify, AggregateListController.updateAggregateList)
 module.exports = router
