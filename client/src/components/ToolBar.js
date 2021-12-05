@@ -64,9 +64,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  //const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const { store } = useContext(GlobalStoreContext);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -92,18 +94,27 @@ export default function PrimarySearchAppBar() {
 
   }
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const handleEnterKeyPressed = (event) => {
     
     if(event.keyCode == 13){
       console.log("enter pressed...")
       console.log('value ', event.target.value);
+      let wId = window.location.href.split('3000')[1];
+      //console.log(wId);
       if(event.target.value===""){
         store.setFilteredPairsToNull();
         console.log(store.idNamePairs);
         console.log(store.filteredPairs);
       }
       else{
-      store.searchLists(event.target.value);
+      store.searchLists(event.target.value, wId);
       console.log(store.filteredPairs);
       }
       
@@ -223,6 +234,8 @@ export default function PrimarySearchAppBar() {
               <GroupsIcon sx={{ fontSize: '75px'}}/>
             </IconButton>
             </Link>
+
+            <Link to='/userlistview/' style={{ textDecoration: 'none', color: "black" }}>
             <IconButton
               size="large"
               edge="end"
@@ -233,6 +246,7 @@ export default function PrimarySearchAppBar() {
             >
               <PersonOutlineIcon sx={{ fontSize: '75px'}}/>
             </IconButton>
+            </Link>
 
             <Link to='/aggregatelistsview/' style={{ textDecoration: 'none', color: "black" }}>
             <IconButton
@@ -262,37 +276,44 @@ export default function PrimarySearchAppBar() {
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
+          <Typography
+                // variant="h6"
+                noWrap
+                component="div"
+                sx={{ display: { xs: 'none', sm: 'block', color: 'black', fontsize:"30pt"  } }}
+            >
+                Sort By
+            </Typography>
           <Box sx={{ display: { xs: 'none', md: 'flex', color: 'black'  } }}>
+          
             <IconButton
                 size="large"
                 edge="start"
                 color="inherit"
                 aria-label="open drawer"
                 sx={{ mr: 2 }}
+                onClick={handleClick}
             >
                 <MenuIcon sx={{ fontSize: '75px'}}/>
             </IconButton>
+            <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
+          >
+            <MenuItem onClick={handleClose}>Publish Date (newest)</MenuItem>
+            <MenuItem onClick={handleClose}>Publish Date (oldest)</MenuItem>
+            <MenuItem onClick={handleClose}>Views</MenuItem>
+            <MenuItem onClick={handleClose}>Likes</MenuItem>
+            <MenuItem onClick={handleClose}>Dislikes</MenuItem>
+          </Menu>
           </Box>
-          <Typography
-                variant="h6"
-                noWrap
-                component="div"
-                sx={{ display: { xs: 'none', sm: 'block', color: 'black'  } }}
-            >
-                Sort By
-            </Typography>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
+          
+          
         </Toolbar>
       </AppBar>
       
