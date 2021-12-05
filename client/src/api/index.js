@@ -35,6 +35,7 @@ export const loginUser = (payload) => api.post(`/login/`, payload)
 export const logoutUser = () => api.get(`/logout/`)
 
 export const getAggregateLists = () => api.get(`/aggregatelists/`)
+export const updateAggregateList = (id, payload) => api.put(`/aggregatelists/${id}`, payload)
 
 const apis = {
     createTop5List,
@@ -49,7 +50,8 @@ const apis = {
     loginUser,
     logoutUser,
 
-    getAggregateLists
+    getAggregateLists,
+    updateAggregateList
 }
 
 export default apis

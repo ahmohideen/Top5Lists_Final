@@ -69,8 +69,8 @@ function AggregateListCard(props) {
         var now = new Date(date);
         date = months[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
 
-        items = list.items
-        itemVotes = list.itemVotes
+        // items = list.items.keys()
+        // itemVotes = list.items.values()
 
     }
 
@@ -112,14 +112,15 @@ function AggregateListCard(props) {
         //the same user can't like something twice
         //and if they like something, and they are in the dislike list, they must be removed
         console.log("like button pressed!")
-        console.log(thisList);
         //store.updateLikes(thisList);
+        store.updateAggregateLikes(list);
 
     }
 
     function dislikeButtonClicked(){
         //therefore, if they dislike something and they're in the like list, they must be removed
         //store.updateDislikes(thisList);
+        store.updateAggregateDislikes(list);
     }
 
 
