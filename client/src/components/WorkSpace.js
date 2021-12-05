@@ -28,6 +28,7 @@ const WorkSpace = () => {
     useEffect(() => {
         //console.log(window.location.href);
         store.loadIdNamePairs();
+        store.loadAggregateLists();
         store.setCurrentList(window.location.href.split('/top5list/')[1]);
         // async function fetchList() {
         //     let response = await store.setCurrentList(window.location.href.split('/top5list/')[1])
