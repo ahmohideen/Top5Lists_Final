@@ -41,6 +41,10 @@ function ListCard(props) {
     let numLikes = 0
     let numDislikes = 0
     let thisList = {}
+    let published = false;
+    let date = ""
+    let comments = {}
+    
     if(store){
         //we're going to get all the info from all the lists for this view
         store.allLists.forEach(element => {
@@ -52,6 +56,14 @@ function ListCard(props) {
                 numLikes = element.likes.length;
                 numDislikes = element.dislike.length;
                 thisList = element;
+                published = element.published;
+                comments = element.comments;
+                date = element.updatedAt;
+               // console.log(date);
+                var months = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'August', 'Sept', 'Oct', 'Nov', 'Dec'];
+                var now = new Date(date);
+                date = months[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
+
             }
         });
     }
@@ -166,7 +178,10 @@ function ListCard(props) {
 
     const handleUnexpandClick = (event) => {
         //store.setCurrentList(id); //problem with doing it this way! - cant open multiple lists!
-        store.updateViews(thisList);
+        if(thisList.published === true){
+            store.updateViews(thisList);
+        }
+        
         let newExpanded = !expand;
         setExpanded(newExpanded);
         // if(store.currentList){
@@ -264,6 +279,18 @@ function ListCard(props) {
     
     </Box>
 
+    let editItem = <Item sx={{ bgcolor: "#fffff0", boxShadow: "none", fontSize:"16pt", marginRight:"100px" }}>
+    <Link to={'/top5list/'+idNamePair._id} onClick={handleEditClicked} >Edit</Link>
+    </Item>
+
+    let color = "#fffff0"
+    if(published===true){
+        color = "#d4d3f8";
+        editItem = <Item sx={{ bgcolor: color, boxShadow: "none", fontSize:"16pt", marginLeft:"50px" }}>
+        Published: {date}
+        </Item>
+        
+    }
 
 
     cardElement =
@@ -276,24 +303,24 @@ function ListCard(props) {
           margin: 2,
           padding: 3,
           fontSize: "36pt",
-          bgcolor: "#fffff0",
+          bgcolor: color,
           border: "solid 1px"
         }}
       >
         <Grid container spacing={2}>
           <Grid item xs={2}>
             <Item
-              sx={{ bgcolor: "#fffff0", boxShadow: "none", fontWeight: "bold", fontSize: "24pt" }}
+              sx={{ bgcolor: color, boxShadow: "none", fontWeight: "bold", fontSize: "24pt" }}
             >
-              {idNamePair.name} by {userName}
+              {idNamePair.name} <h style={{fontSize: "16pt"}}> by {userName}</h>
               {/* <Button onClick={buttonClicked(idNamePair._id)}></Button> */}
             </Item>
           </Grid>
           <Grid item xs={6}>
-            <Item sx={{ bgcolor: "#fffff0", boxShadow: "none" }}></Item>
+            <Item sx={{ bgcolor: color, boxShadow: "none" }}></Item>
           </Grid>
           <Grid item xs={1}>
-            <Item sx={{ bgcolor: "#fffff0", boxShadow: "none" }}>
+            <Item sx={{ bgcolor: color, boxShadow: "none" }}>
               <IconButton>
                 <ThumbUpIcon style={{ fontSize: "40pt" }} onClick={likeButtonClicked} />
                 {numLikes}
@@ -301,7 +328,7 @@ function ListCard(props) {
             </Item>
           </Grid>
           <Grid item xs={1}>
-            <Item sx={{ bgcolor: "#fffff0", boxShadow: "none" }}>
+            <Item sx={{ bgcolor: color, boxShadow: "none" }}>
               <IconButton>
                 <ThumbDownIcon style={{ fontSize: "40pt" }}  onClick={dislikeButtonClicked}/>
                 {numDislikes}
@@ -309,7 +336,7 @@ function ListCard(props) {
             </Item>
           </Grid>
           <Grid item xs={2}>
-            <Item sx={{ bgcolor: "#fffff0", boxShadow: "none" }}>
+            <Item sx={{ bgcolor: color, boxShadow: "none" }}>
               <IconButton>
                 <DeleteIcon style={{ fontSize: "40pt" }} onClick={(event) => {
                         handleDeleteList(event, idNamePair._id)
@@ -318,21 +345,19 @@ function ListCard(props) {
             </Item>
           </Grid>
 
-          <Grid item xs={1}>
-            <Item sx={{ bgcolor: "#fffff0", boxShadow: "none", fontSize:"16pt", marginLeft:"50px" }}>
-            <Link to={'/top5list/'+idNamePair._id} onClick={handleEditClicked} >Edit</Link>
-            </Item>
+          <Grid item xs={2}>
+            {editItem}
           </Grid>
-          <Grid item xs={7}>
-            <Item sx={{ bgcolor: "#fffff0", boxShadow: "none" }}></Item>
+          <Grid item xs={6}>
+            <Item sx={{ bgcolor: color, boxShadow: "none" }}></Item>
           </Grid>
           <Grid item xs={2}>
-            <Item sx={{ bgcolor: "#fffff0", boxShadow: "none", fontSize:"20pt" }}>
+            <Item sx={{ bgcolor: color, boxShadow: "none", fontSize:"20pt" }}>
               Views: {views}
             </Item>
           </Grid>
           <Grid item xs={2}>
-            <Item sx={{ bgcolor: "#fffff0", boxShadow: "none" }}>
+            <Item sx={{ bgcolor: color, boxShadow: "none" }}>
               {icon}
             </Item>
           </Grid>
@@ -342,7 +367,7 @@ function ListCard(props) {
         </Paper> */}
         <Grid container spacing={2}>
         <Grid item >
-            <ListItem sx={{width: "1500px", height: "100%", bgcolor: "#fffff0", margin: 2, padding: 3}}> <Top5ItemBox items={items} /> </ListItem>
+            <ListItem sx={{width: "1500px", height: "100%", bgcolor: color, margin: 2, padding: 3}}> <Top5ItemBox items={items} /> </ListItem>
         </Grid>
         <Grid item >
             {/* <CommentBox ></CommentBox> */}

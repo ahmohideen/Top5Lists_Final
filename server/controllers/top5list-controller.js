@@ -62,6 +62,9 @@ updateTop5List = async (req, res) => {
         if(body.dislike){
             top5List.dislike = body.dislike
         }
+        if(body.published){
+            top5List.published = body.published
+        }
 
         
         top5List
