@@ -650,10 +650,12 @@ function GlobalStoreContextProvider(props) {
     store.updateCurrentList = async function () {
         const response = await api.updateTop5ListById(store.currentList._id, store.currentList);
         if (response.data.success) {
+            
             storeReducer({
                 type: GlobalStoreActionType.SET_CURRENT_LIST,
                 payload: store.currentList
             });
+            
         }
         //store.updateToolbarButtons();
     }
@@ -766,10 +768,6 @@ function GlobalStoreContextProvider(props) {
     }
 
 
-    //lets think about sorting
-    store.sortList = function () {
-
-    }
 
 
 

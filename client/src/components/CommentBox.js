@@ -12,17 +12,21 @@ import Grid from "@mui/material/Grid";
 
 function CommentBox(props) {
     const { store } = useContext(GlobalStoreContext);
-    const { color } = props;
+    const { color} = props;
 
     useEffect(() => {
         console.log("in comments!")
+        console.log(store.currentList);
         //store.loadIdNamePairs();
-    }, [store.currentList, JSON.stringify(store.currentList)]);
+    }, );
 
-    let comments = []
+    let comments = [];
     if(store.currentList){
         comments = store.currentList.comments;
     }
+    // if(store.currentList){
+    //     comments = store.currentList.comments;
+    // }
 
     function addComment(event){
         //store.addComment(event.target.value);

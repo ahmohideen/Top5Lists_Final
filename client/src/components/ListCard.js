@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { GlobalStoreContext } from '../store'
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
@@ -37,6 +37,10 @@ function ListCard(props) {
     const { idNamePair } = props;
     
 
+    useEffect(() => {
+        store.loadIdNamePairs();
+    }, []);
+
     let userName = ""
     let views = 0
     let numLikes = 0
@@ -59,7 +63,7 @@ function ListCard(props) {
                 thisList = element;
                 published = element.published;
                 comments = element.comments;
-                date = element.updatedAt;
+                date = element.createdAt;
                // console.log(date);
                 var months = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'August', 'Sept', 'Oct', 'Nov', 'Dec'];
                 var now = new Date(date);
@@ -164,6 +168,10 @@ function ListCard(props) {
         store.setCurrentList(id); //problem with doing it this way! - cant open multiple lists!
         let newExpanded = !expand
         setExpanded(newExpanded);
+        if(thisList.published === true){
+            store.updateViews(thisList);
+            //store.updateViews(store.currentList);
+        }
         // console.log(store.currentList);
         // console.log(store.allLists);
 
@@ -179,9 +187,10 @@ function ListCard(props) {
 
     const handleUnexpandClick = (event) => {
         //store.setCurrentList(id); //problem with doing it this way! - cant open multiple lists!
-        if(thisList.published === true){
-            store.updateViews(thisList);
-        }
+        // if(thisList.published === true){
+        //     //store.updateViews(thisList);
+        //     store.updateViews(store.currentList);
+        // }
         
         let newExpanded = !expand;
         setExpanded(newExpanded);
