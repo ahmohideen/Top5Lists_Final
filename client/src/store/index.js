@@ -530,7 +530,7 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.deleteList = async function (listToDelete) {
-        //store.deleteAggregateVotes(listToDelete);
+        store.deleteAggregateVotes(listToDelete);
         let response = await api.deleteTop5ListById(listToDelete._id);
         if (response.data.success) {
             //when a list is deleted, its votes must be removed from the 
@@ -881,6 +881,9 @@ function GlobalStoreContextProvider(props) {
         //this is a normal t5 list!!!!
         let flag = false
         let aList = {}
+        let pointIndex = [5, 4, 3, 2, 1];
+        let itemsArray = aList.items;
+        let aggregateKeys = []
         store.aggregateLists.forEach(element => {
             if(element.name === list.name){
                 //then we have some deleting to do~
@@ -890,9 +893,7 @@ function GlobalStoreContextProvider(props) {
         });
 
         if(flag){
-            let pointIndex = [5, 4, 3, 2, 1];
-            let itemsArray = aList.items;
-            let aggregateKeys = []
+            
             for(let i = 0; i < itemsArray.length; i++){
                 aggregateKeys.push(itemsArray[i].item)
             }
@@ -906,6 +907,8 @@ function GlobalStoreContextProvider(props) {
         console.log(itemsArray);
         
         }
+        aList.items = itemsArray;
+        store.updateAggregateList(aList._id, aList);
     }
 
     store.updateAggregateList = async function (id, list) {
