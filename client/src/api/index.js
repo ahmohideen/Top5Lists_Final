@@ -34,7 +34,7 @@ export const registerUser = (payload) => api.post(`/register/`, payload)
 export const loginUser = (payload) => api.post(`/login/`, payload)
 export const logoutUser = () => api.get(`/logout/`)
 
-export const createAggregateList = (payload) => api.post('/aggregatelist', payload)
+export const createAggregateList = (payload) => api.post('/aggregatelist/', payload)
 export const getAggregateLists = () => api.get(`/aggregatelists/`)
 export const updateAggregateList = (id, payload) => api.put(`/aggregatelists/${id}`, payload)
 

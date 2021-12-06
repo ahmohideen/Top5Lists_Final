@@ -386,6 +386,9 @@ function GlobalStoreContextProvider(props) {
         let listWithEmails = await store.getAllLists().then((e) => {
             return e
         });
+        
+
+        //        store.loadAggregateLists();
         // console.log(listWithEmails);
         // console.log("looking at allLists")
         // console.log(store.allLists);
@@ -481,6 +484,7 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.deleteList = async function (listToDelete) {
+        store.deleteAggregateVotes(listToDelete);
         let response = await api.deleteTop5ListById(listToDelete._id);
         if (response.data.success) {
             //when a list is deleted, its votes must be removed from the 
@@ -678,18 +682,22 @@ function GlobalStoreContextProvider(props) {
             //if it does --> tally up the votes and then update that aggregate list
             let a = false;
             console.log(store.aggregateLists);
-            store.aggregateLists.forEach(element => {
-                if(element.name.toLowerCase() === list.name.toLowerCase()){
-                    console.log("aggregate name match");
-                    //aggregate list exists!
-                    store.updateAggregateListItems(list.items, element);
-                    a = true
+            if(store.aggregateLists){
+                store.aggregateLists.forEach(element => {
+                    if(element.name.toLowerCase() === list.name.toLowerCase()){
+                        console.log("aggregate name match");
+                        //aggregate list exists!
+                        store.updateAggregateListItems(list.items, element);
+                        a = true
+                    }
+                });
+                if(a===false){
+                    //aggregate list does not exist yet
+                    //store.createAggregateList(list);
+                    store.createAggregateList(list);
                 }
-            });
-            if(a===false){
-                //aggregate list does not exist yet
-                //store.createAggregateList(list);
             }
+            
             history.push("/");
 
 
@@ -822,6 +830,38 @@ function GlobalStoreContextProvider(props) {
         store.updateAggregateList(list._id, list);
     }
 
+
+    store.deleteAggregateVotes = function(list){
+        //this is a normal t5 list!!!!
+        let flag = false
+        let aList = {}
+        store.aggregateLists.forEach(element => {
+            if(element.name === list.name){
+                //then we have some deleting to do~
+                flag = true
+                aList = element
+            }
+        });
+
+        if(flag){
+            let pointIndex = [5, 4, 3, 2, 1];
+            let itemsArray = aList.items;
+            let aggregateKeys = []
+            for(let i = 0; i < itemsArray.length; i++){
+                aggregateKeys.push(itemsArray[i].item)
+            }
+            //okay, now we have the aggregate keys
+            for(let x = 0; x < list.items.length; x++){
+                if(aggregateKeys.includes(list.items[x])){
+                    let index = aggregateKeys.indexOf(list.items[x]);
+                    itemsArray[index].vote = itemsArray[index].vote - pointIndex[x]
+                }
+            }
+        console.log(itemsArray);
+        
+        }
+    }
+
     store.updateAggregateList = async function (id, list) {
         const response = await api.updateAggregateList(id, list);
         if (response.data.success) {
@@ -833,6 +873,39 @@ function GlobalStoreContextProvider(props) {
             // });
         }
         
+    }
+
+    store.createAggregateList = async function(list) {
+        //we're receiving a normal, top 5 list!
+        let aItems = [];
+        let voteCount = 5;
+        list.items.forEach(element => {
+            let o = { item: element, vote: voteCount}
+            aItems.push(o) 
+            voteCount = voteCount-1;
+        }); 
+        
+        let payload = {
+            name: list.name,
+            items: aItems,
+            likes: [],
+            dislike: [],
+            views: 0,
+            comments: [{}]
+
+        };
+        console.log(payload);
+
+        const response = await api.createAggregateList(payload);
+        if (response.data.success) {
+            console.log("yay, aggregate list created")
+            store.loadAggregateLists();
+            // storeReducer({
+            //     type: GlobalStoreActionType.SET_AGGREGATE_LISTS,
+            //     payload: list
+            // });
+        }
+
     }
 
 

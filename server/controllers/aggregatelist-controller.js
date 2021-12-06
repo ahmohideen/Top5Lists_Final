@@ -20,7 +20,7 @@ createAggregateList = (req, res) => {
         .then(() => {
             return res.status(201).json({
                 success: true,
-                top5List: aggregateList,
+                aggregateList: aggregateList,
                 message: 'Aggregate List Created!'
             })
         })
