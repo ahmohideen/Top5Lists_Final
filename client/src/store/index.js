@@ -5,6 +5,7 @@ import api from '../api'
 import MoveItem_Transaction from '../transactions/MoveItem_Transaction'
 import UpdateItem_Transaction from '../transactions/UpdateItem_Transaction'
 import AuthContext from '../auth'
+import { formLabelClasses } from '@mui/material'
 /*
     This is our global data store. Note that it uses the Flux design pattern,
     which makes use of things like actions and reducers. 
@@ -654,11 +655,13 @@ function GlobalStoreContextProvider(props) {
 
 
     store.publishList = async function (list) {
+        //store.loadAggregateLists();
+        
         let uName = auth.user.userName;
         let publish = true
         store.allLists.forEach(element => {
             if(element.uName === list.uName){
-                if(element.name === list.name){
+                if(element.name === list.name && element._id !== list._id){
                     console.log("we cant publish this list yet, the names match")
                     publish = false
                 }
@@ -666,11 +669,27 @@ function GlobalStoreContextProvider(props) {
         });
         if(publish){
             list.published = true;
-            //console.log(list)
+            console.log(list)
+
             store.updateListById(list._id, list);
+
             //aight, so this is where we have to check aggregate lists
             //if an aggregate with this name does not exist --> create it
             //if it does --> tally up the votes and then update that aggregate list
+            let a = false;
+            console.log(store.aggregateLists);
+            store.aggregateLists.forEach(element => {
+                if(element.name.toLowerCase() === list.name.toLowerCase()){
+                    console.log("aggregate name match");
+                    //aggregate list exists!
+                    store.updateAggregateListItems(list.items, element);
+                    a = true
+                }
+            });
+            if(a===false){
+                //aggregate list does not exist yet
+                //store.createAggregateList(list);
+            }
             history.push("/");
 
 
@@ -734,33 +753,32 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.updateAggregateListItems = function(items, aggregateList){
-        // let pointIndex = [5, 4, 3, 2, 1];
-        // let aItems = aggregateList.items;
-        // let aVotes = aggregateList.votes;
-        // items.forEach(element => {
-        //     if(aItems.includes(element)){
-        //         let aItemIndex = aItems.indexOf(element);
-        //         aVotes[aItemIndex] = aVotes[aItemIndex] + pointIndex[items.indexOf(element)]
-        //     }
-        //     else{
-        //         //we should add it to the aggregate lists' items, right?
-        //         //and then we can just display the first 5 items in aggregate list card
-        //         //aItems.push(element);
-        //     }
-        // });
-        // console.log(aItems);
-        // aggregateList.items = aItems;
-        // aggregateList.votes = aVotes;
-        //store.updateAggregateList(aggregateList._id, aggregateList)
-
-
-
+        let pointIndex = [5, 4, 3, 2, 1];
+        let itemsArray = aggregateList.items;
+        let aggregateKeys = []
+        for(let i = 0; i < itemsArray.length; i++){
+            aggregateKeys.push(itemsArray[i].item)
+        }
+        //okay, now we have the aggregate keys
+        for(let x = 0; x < items.length; x++){
+            if(aggregateKeys.includes(items[x])){
+                let index = aggregateKeys.indexOf(items[x]);
+                itemsArray[index].vote = itemsArray[index].vote + pointIndex[x]
+            }
+            else{
+                let o = { item: items[x], vote: pointIndex[x]}
+                itemsArray.push(o);
+            }
+        }
+        //console.log(itemsArray);
+        aggregateList.items = itemsArray;
+        store.updateAggregateList(aggregateList._id, aggregateList);
     }
 
     store.updateAggregateLikes = function (list) {
         let uName = auth.user.userName;
         if(list.likes.includes(uName)){
-            //do nothing
+            //do noth
         }
         else if(list.dislike.includes(uName)){
             let index = list.dislike.indexOf(uName);
