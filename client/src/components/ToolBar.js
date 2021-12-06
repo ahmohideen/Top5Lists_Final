@@ -121,6 +121,15 @@ export default function PrimarySearchAppBar() {
    }
   }
 
+
+  const handleSort = (event) => {
+    let wId = window.location.href.split('3000')[1];
+    console.log(wId);
+    console.log(event.target.innerText);
+    let sortKey = event.target.innerText.toLowerCase()
+    store.sortLists(sortKey, wId);
+  }
+
   //search is going to call a store method, which can in turn re render lists. 
   //do we need to know which view we're on? not really, right?
   //as long as the store method just changes all of them we'll be fine
@@ -305,11 +314,11 @@ export default function PrimarySearchAppBar() {
               'aria-labelledby': 'basic-button',
             }}
           >
-            <MenuItem onClick={handleClose}>Publish Date (newest)</MenuItem>
-            <MenuItem onClick={handleClose}>Publish Date (oldest)</MenuItem>
-            <MenuItem onClick={handleClose}>Views</MenuItem>
-            <MenuItem onClick={handleClose}>Likes</MenuItem>
-            <MenuItem onClick={handleClose}>Dislikes</MenuItem>
+            <MenuItem onClick={handleSort}>Publish Date (newest)</MenuItem>
+            <MenuItem onClick={handleSort}>Publish Date (oldest)</MenuItem>
+            <MenuItem onClick={handleSort}>Views</MenuItem>
+            <MenuItem onClick={handleSort}>Likes</MenuItem>
+            <MenuItem onClick={handleSort}>Dislikes</MenuItem>
           </Menu>
           </Box>
           

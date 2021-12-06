@@ -31,7 +31,8 @@ export const GlobalStoreActionType = {
     SET_FILTERED_LIST: "SET_FILTERED_LIST",
     SET_FILTERED_LIST_TO_NULL: "SET_FILTERED_LIST_TO_NULL",
     SET_ALL_LISTS: "SET_ALL_LISTS",
-    SET_AGGREGATE_LISTS: "SET_AGGREGATE_LISTS"
+    SET_AGGREGATE_LISTS: "SET_AGGREGATE_LISTS",
+    SET_SORTED_LISTS: "SET_SORTED_LISTS"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -51,7 +52,9 @@ function GlobalStoreContextProvider(props) {
         listMarkedForDeletion: null,
         searchActive: false,
         allLists: [],
-        aggregateLists: []
+        aggregateLists: [],
+        sortedLists: [],
+        sortActive: false
         //allLists: []
         //userLists: []
         //
@@ -78,7 +81,9 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     searchActive: false,
                     allLists: store.allLists,
-                    aggregateLists: store.aggregateLists
+                    aggregateLists: store.aggregateLists,
+                    sortedLists: store.sortedLists,
+                    sortActive: false
                 });
             }
             case GlobalStoreActionType.SET_FILTERED_LIST: {
@@ -92,7 +97,9 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     searchActive: true,
                     allLists: store.allLists,
-                    aggregateLists: store.aggregateLists
+                    aggregateLists: store.aggregateLists,
+                    sortedLists: store.sortedLists,
+                    sortActive: false
                 });
             }
 
@@ -107,7 +114,9 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     searchActive: false,
                     allLists: store.allLists,
-                    aggregateLists: store.aggregateLists
+                    aggregateLists: store.aggregateLists,
+                    sortedLists: store.sortedLists,
+                    sortActive: false
                 });
             }
 
@@ -123,7 +132,9 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     searchActive: false,
                     allLists: store.allLists,
-                    aggregateLists: store.aggregateLists
+                    aggregateLists: store.aggregateLists,
+                    sortedLists: store.sortedLists,
+                    sortActive: false
                 })
             }
             // CREATE A NEW LIST
@@ -138,7 +149,9 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     searchActive: false,
                     allLists: store.allLists,
-                    aggregateLists: store.aggregateLists
+                    aggregateLists: store.aggregateLists,
+                    sortedLists: store.sortedLists,
+                    sortActive: false
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -153,7 +166,9 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     searchActive: false,
                     allLists: payload.allLists,
-                    aggregateLists: store.aggregateLists
+                    aggregateLists: store.aggregateLists,
+                    sortedLists: store.sortedLists,
+                    sortActive: false
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -168,7 +183,9 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: payload,
                     searchActive: false,
                     allLists: store.allLists,
-                    aggregateLists: store.aggregateLists
+                    aggregateLists: store.aggregateLists,
+                    sortedLists: store.sortedLists,
+                    sortActive: false
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -183,7 +200,9 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     searchActive: false,
                     allLists: store.allLists,
-                    aggregateLists: store.aggregateLists
+                    aggregateLists: store.aggregateLists,
+                    sortedLists: store.sortedLists,
+                    sortActive: false
                 });
             }
             // UPDATE A LIST
@@ -198,7 +217,9 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     searchActive: store.searchActive,
                     allLists: store.allLists,
-                    aggregateLists: store.aggregateLists
+                    aggregateLists: store.aggregateLists,
+                    sortedLists: store.sortedLists,
+                    sortActive: false
                 });
             }
             // START EDITING A LIST ITEM
@@ -213,7 +234,9 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     searchActive: false,
                     allLists: store.allLists,
-                    aggregateLists: store.aggregateLists
+                    aggregateLists: store.aggregateLists,
+                    sortedLists: store.sortedLists,
+                    sortActive: false
                 });
             }
 
@@ -228,7 +251,9 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     searchActive: false,
                     allLists: payload,
-                    aggregateLists: store.aggregateLists
+                    aggregateLists: store.aggregateLists,
+                    sortedLists: store.sortedLists,
+                    sortActive: false
                 });
             }
 
@@ -245,7 +270,9 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     searchActive: false,
                     allLists: store.allLists,
-                    aggregateLists: store.aggregateLists
+                    aggregateLists: store.aggregateLists,
+                    sortedLists: store.sortedLists,
+                    sortActive: false
                 });
             }
 
@@ -260,7 +287,26 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     searchActive: false,
                     allLists: store.allLists,
-                    aggregateLists: payload
+                    aggregateLists: payload,
+                    sortedLists: store.sortedLists,
+                    sortActive: false
+                });
+            }
+
+            case GlobalStoreActionType.SET_SORTED_LISTS: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    filteredPairs: null,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: null,
+                    searchActive: false,
+                    allLists: store.allLists,
+                    aggregateLists: store.aggregateLists,
+                    sortedLists: payload,
+                    sortActive: true
                 });
             }
 
@@ -484,7 +530,7 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.deleteList = async function (listToDelete) {
-        store.deleteAggregateVotes(listToDelete);
+        //store.deleteAggregateVotes(listToDelete);
         let response = await api.deleteTop5ListById(listToDelete._id);
         if (response.data.success) {
             //when a list is deleted, its votes must be removed from the 
@@ -914,11 +960,132 @@ function GlobalStoreContextProvider(props) {
 
 
 
+    store.sortLists = function (sortCase, view) {
+        console.log("sorting lists...");
+        
+        let uName = auth.user.userName;
+        let tempArray = []
+        let aLists = store.allLists
+        let aggLists = store.aggregateLists
+        //and alllists is an array of objects
+        if(sortCase==="views"){
+            aLists.sort((a, b) => (a.views < b.views) ? 1 : -1);
+            aggLists.sort((a, b) => (a.views < b.views) ? 1 : -1);
+        }
+        if(sortCase==="likes"){
+            aLists.sort((a, b) => (a.likes.length < b.likes.length) ? 1 : -1);
+            aggLists.sort((a, b) => (a.likes.length < b.likes.length) ? 1 : -1);
+        }
+        if(sortCase==="dislikes"){
+            aLists.sort((a, b) => (a.dislike.length < b.dislike.length) ? 1 : -1);
+            aggLists.sort((a, b) => (a.dislike.length < b.dislike.length) ? 1 : -1);
+        }
+        if(sortCase==="publish date (newest)"){
+            aLists.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+            aggLists.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+        }
+        if(sortCase==="publish date (oldest)"){
+            aLists.sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt));
+            aggLists.sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt));
+        }
 
+        if(view === "/"){
+            //this is the one for the user's own list, published and unpublished
+            aLists.forEach(element => {
+                if(element.userName === uName){
+                    tempArray.push(element)
+                }
+            });
 
+        }
+
+        if(view==="/alllistsviews/" || view===""){
+            // store.idNamePairs.forEach(element => {
+            //     if(element.name.toLowerCase() === searchWord.toLowerCase()){
+            //         console.log("we hit the search key")
+            //         tempArray.push(element);
+            //     }
+            // });
+            //tempArray = aLists;
+            aLists.forEach(element => {
+                if(element.published === true){
+                    tempArray.push(element)
+                }
+            });
+
+        }
+        if(view==="/userlistview/"){
+            // store.allLists.forEach(element => {
+            //     if(element.userName.toLowerCase() === searchWord.toLowerCase()){
+            //         console.log("we hit the search key (username)")
+            //         tempArray.push(element);
+            //     }
+            // });
+            if(store.searchActive){
+                aLists.forEach(element => {
+                    if(element.userName === uName && element.published===true){
+                        tempArray.push(element)
+                    }
+                });
+            }
+        }
+
+        if(view==="/aggregatelistsview/"){
+            // store.allLists.forEach(element => {
+            //     if(element.userName.toLowerCase() === searchWord.toLowerCase()){
+            //         console.log("we hit the search key (username)")
+            //         tempArray.push(element);
+            //     }
+            // });
+            tempArray = aggLists;
+            
+        }
+        
+        console.log(tempArray)
+        let payload = []
+        if(view==="/aggregatelistsview/"){
+            //then we set the id name pairs differently
+            payload = tempArray;
+        }
+        else{
+            //so, at this point, if any element of idname pairs matches a name in 
+            //temparray, add it
+
+            //no, because we have a sorted list, we're just transforming it into id-name pairs
+            tempArray.forEach(element => {
+                let o = {_id: element._id, name: element.name}
+                payload.push(o);
+            });
+
+            // let payload = []
+            // let keyArray = []
+            // for(let i = 0; i < tempArray.length; i++){
+            //     keyArray.push(tempArray[i].name)
+            // }
+            // store.idNamePairs.forEach(element => {
+            //     if(keyArray.contains(element.name)){
+            //         payload.push(element)
+            //     }
+            // });
+
+        }
+        storeReducer({
+            type: GlobalStoreActionType.SET_SORTED_LISTS,
+            payload: payload
+        });
+
+    }
+
+    store.setSortedListToNull = function() {
+        storeReducer({
+            type: GlobalStoreActionType.SET_SORTED_LISTS,
+            payload: []
+        });
+    }
 
 
     store.searchLists = function (searchWord, view) {
+        //store.setSortedListToNull();
         console.log("filtering lists...");
         console.log(searchWord);
         console.log(store.idNamePairs);
@@ -954,6 +1121,11 @@ function GlobalStoreContextProvider(props) {
             payload: []
         });
     }
+
+
+
+
+
 
     store.undo = function () {
         tps.undoTransaction();

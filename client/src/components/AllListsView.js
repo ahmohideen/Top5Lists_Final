@@ -34,7 +34,7 @@ const AllListsView = () => {
             if(homeIdNamePairs[x]._id === allLists[x]._id){
                 // console.log("match!")
                 // console.log(allLists[x].userName);
-                if(allLists[x].published === true){
+                if(allLists[x].published === true && allLists[x].hasOwnProperty("userName") === true){
                     aList.push(homeIdNamePairs[x]);
                     //console.log(homeList);
                 }
@@ -75,6 +75,24 @@ const AllListsView = () => {
                 
                 
             }
+            else if(store.sortActive === true){
+                console.log("sorted pairs...")
+                console.log(store.sortedLists);
+                listCard = 
+                <List sx={{ width: '90%', left: '5%'}}>
+                {
+                    store.sortedLists.map((pair) => (
+                        <ListCard
+                            key={pair._id}
+                            idNamePair={pair}
+                            selected={false}
+                        />
+                    ))
+                }
+                </List>;
+                
+                
+            }
             else{
                 listCard = 
             <List sx={{ width: '90%', left: '5%'}}>
@@ -89,6 +107,11 @@ const AllListsView = () => {
             }
             </List>;
             }
+            
+
+            
+
+
             console.log("Boolean value of searchActive from store");
             console.log(store.searchActive);
     }
