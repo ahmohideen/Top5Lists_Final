@@ -1089,7 +1089,18 @@ function GlobalStoreContextProvider(props) {
         console.log("filtering lists...");
         console.log(searchWord);
         console.log(store.idNamePairs);
+        let uName = auth.user.userName
         let tempArray = []
+        if(view==="/"){
+            console.log("here we are");
+            store.idNamePairs.forEach(element => {
+                if(element.name.toLowerCase() === searchWord.toLowerCase()){
+                    console.log("we hit the search key")
+                    tempArray.push(element);
+                }
+            });
+        }
+
         if(view==="/alllistsviews/" || view===""){
             store.idNamePairs.forEach(element => {
                 if(element.name.toLowerCase() === searchWord.toLowerCase()){
