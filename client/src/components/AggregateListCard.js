@@ -15,9 +15,11 @@ import Grid from "@mui/material/Grid";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { styled } from "@mui/material/styles";
-import  CommentBox  from './CommentBox';
+import AggregateCommentBox  from './AggregateCommentBox';
 import Button from "@mui/material/Button";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import List from '@mui/material/List';
+import AggregateTop5Box from "./AggregateTop5Box"
 
 
 /*
@@ -139,6 +141,7 @@ function AggregateListCard(props) {
         // if(store.currentList){
         //     store.updateViews();
         // }
+        store.updateAggregateViews(list);
       };
 
     const Item = styled(Paper)(({ theme }) => ({
@@ -225,12 +228,23 @@ function AggregateListCard(props) {
         <Collapse in={expand} timeout="auto" unmountOnExit sx={{ width: "100%", height: "100%", marginTop:0, paddingTop:0, borderCollapse:"collapse" }} >
         {/* <Paper disableSpacing elevation={0} sx={{height: "100px", width: "100%", bgcolor: "#fffff0" }}>
         </Paper> */}
-        <Grid container spacing={2}>
-        <Grid item >
-            <ListItem sx={{width: "1500px", height: "100%", bgcolor: "#d4d3f8", margin: 2, padding: 3}}> <Top5ItemBox items={items} votes={itemVotes} /> </ListItem>
+        <Grid container spacing={0}>
+        <Grid item xs={6}>
+            <ListItem sx={{width: "1500px", height: "100%", bgcolor: "#d4d3f8", margin: 2, padding: 3}}> <AggregateTop5Box items={list.items} /> </ListItem>
         </Grid>
-        <Grid item >
-            {/* <CommentBox ></CommentBox> */}
+        <Grid item xs={6}>
+        <List sx={{
+            width: '100%',
+            maxWidth: 1000,
+            bgcolor: "#d4d3f8",
+            position: 'relative',
+            overflow: 'auto',
+            maxHeight: 500,
+            marginTop: "40px",
+            '& ul': { padding: 0 },
+        }}>
+        <ListItem> <AggregateCommentBox list={list} /> </ListItem>
+        </List>
         </Grid>
         </Grid>
         {/* hello */}
