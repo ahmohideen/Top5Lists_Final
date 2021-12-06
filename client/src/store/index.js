@@ -1022,11 +1022,25 @@ function GlobalStoreContextProvider(props) {
             //     }
             // });
             if(store.searchActive){
-                aLists.forEach(element => {
-                    if(element.userName === uName && element.published===true){
-                        tempArray.push(element)
-                    }
+                let fLists = store.filteredPairs;
+                console.log(fLists);
+                console.log(aLists);
+                let nameKeys = []
+                fLists.forEach(element => {
+                    nameKeys.push(element.name)
                 });
+                console.log(nameKeys);
+                for(let x = 0; x < aLists.length; x++){
+                    if(nameKeys.includes(aLists[x].name)){
+                        tempArray.push(aLists[x])
+                    }
+                }
+
+                // aLists.forEach(element => {
+                //     if(element.userName === uName && element.published===true){
+                //         tempArray.push(element)
+                //     }
+                // });
             }
         }
 
@@ -1113,7 +1127,17 @@ function GlobalStoreContextProvider(props) {
             store.allLists.forEach(element => {
                 if(element.userName.toLowerCase() === searchWord.toLowerCase()){
                     console.log("we hit the search key (username)")
-                    tempArray.push(element);
+                    if(element.published === true){
+                        tempArray.push(element);
+                    }
+                    
+                }
+            });
+        }
+        if(view==="/aggregatelistsview/"){
+            store.aggregateLists.forEach(element => {
+                if(element.name.toLowerCase() === searchWord.toLowerCase()){
+                    tempArray.push(element);  
                 }
             });
         }

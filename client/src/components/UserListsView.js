@@ -56,6 +56,24 @@ const UserListsView = () => {
                 
                 
             }
+            else if(store.sortActive === true){
+                console.log("sorted pairs...")
+                console.log(store.sortedLists);
+                listCard = 
+                <List sx={{ width: '90%', left: '5%'}}>
+                {
+                    store.sortedLists.map((pair) => (
+                        <ListCard
+                            key={pair._id}
+                            idNamePair={pair}
+                            selected={false}
+                        />
+                    ))
+                }
+                </List>;
+                
+                
+            }
             else{
             //     listCard = 
             // <List sx={{ width: '90%', left: '5%'}}>

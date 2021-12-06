@@ -37,6 +37,69 @@ const AggregateListsView = () => {
                 ))
             }
             </List>;
+        if(store.searchActive === true){
+            console.log("filtered pairs...")
+            console.log(store.filteredPairs);
+            listCard = 
+            <List sx={{ width: '90%', left: '5%'}}>
+            {
+                store.filteredPairs.map((element) => (
+                    <AggregateListCard
+                        key={element._id}
+                        list={element}
+                        selected={false}
+                    />
+                ))
+            }
+            </List>;
+            // listCard = 
+            // <List sx={{ width: '90%', left: '5%'}}>
+            // {
+            //     store.filteredPairs.map((pair) => (
+            //         <ListCard
+            //             key={pair._id}
+            //             idNamePair={pair}
+            //             selected={false}
+            //         />
+            //     ))
+            // }
+            // </List>;
+            
+            
+            
+        }
+        else if(store.sortActive === true){
+            console.log("sorted pairs...")
+            console.log(store.sortedLists);
+            listCard = 
+            <List sx={{ width: '90%', left: '5%'}}>
+            {
+                store.sortedLists.map((element) => (
+                    <AggregateListCard
+                        key={element._id}
+                        list={element}
+                        selected={false}
+                    />
+                ))
+            }
+            </List>;
+            
+            
+        }
+        else{
+            listCard = 
+            <List sx={{ width: '90%', left: '5%'}}>
+            {
+                store.aggregateLists.map((element) => (
+                    <AggregateListCard
+                        key={element._id}
+                        list={element}
+                        selected={false}
+                    />
+                ))
+            }
+            </List>;
+        }
 
     }
 
