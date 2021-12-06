@@ -1,5 +1,40 @@
 const AggregateList = require('../models/aggregatelist-model');
 
+createAggregateList = (req, res) => {
+    const body = req.body;
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a Aggregate List',
+        })
+    }
+
+    const aggregateList = new AggregateList(body);
+    console.log("creating aggregateList: " + JSON.stringify(aggregateList));
+    if (!aggregateList) {
+        return res.status(400).json({ success: false, error: err })
+    }
+
+    aggregateList
+        .save()
+        .then(() => {
+            return res.status(201).json({
+                success: true,
+                top5List: aggregateList,
+                message: 'Aggregate List Created!'
+            })
+        })
+        .catch(error => {
+            return res.status(400).json({
+                error,
+                message: 'Aggregate List Not Created!'
+            })
+        })
+}
+
+
+
+
 getAggregateLists = async (req, res) => {
     await AggregateList.find({}, (err, aggregateLists) => {
         if (err) {
@@ -72,6 +107,7 @@ updateAggregateList = async (req, res) => {
 
 
 module.exports = {
+    createAggregateList,
     getAggregateLists,
     updateAggregateList
 }

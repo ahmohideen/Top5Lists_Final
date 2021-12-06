@@ -668,12 +668,13 @@ function GlobalStoreContextProvider(props) {
             list.published = true;
             //console.log(list)
             store.updateListById(list._id, list);
-            history.push("/");
-
-
             //aight, so this is where we have to check aggregate lists
             //if an aggregate with this name does not exist --> create it
             //if it does --> tally up the votes and then update that aggregate list
+            history.push("/");
+
+
+           
         }
     }
 
@@ -733,24 +734,27 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.updateAggregateListItems = function(items, aggregateList){
-        let pointIndex = [5, 4, 3, 2, 1];
-        let aItems = aggregateList.items;
-        let aVotes = aggregateList.votes;
-        items.forEach(element => {
-            if(aItems.includes(element)){
-                let aItemIndex = aItems.indexOf(element);
-                aVotes[aItemIndex] = aVotes[aItemIndex] + pointIndex[items.indexOf(element)]
-            }
-            else{
-                //we should add it to the aggregate lists' items, right?
-                //and then we can just display the first 5 items in aggregate list card
-                //aItems.push(element);
-            }
-        });
-        console.log(aItems);
-        aggregateList.items = aItems;
-        aggregateList.votes = aVotes;
+        // let pointIndex = [5, 4, 3, 2, 1];
+        // let aItems = aggregateList.items;
+        // let aVotes = aggregateList.votes;
+        // items.forEach(element => {
+        //     if(aItems.includes(element)){
+        //         let aItemIndex = aItems.indexOf(element);
+        //         aVotes[aItemIndex] = aVotes[aItemIndex] + pointIndex[items.indexOf(element)]
+        //     }
+        //     else{
+        //         //we should add it to the aggregate lists' items, right?
+        //         //and then we can just display the first 5 items in aggregate list card
+        //         //aItems.push(element);
+        //     }
+        // });
+        // console.log(aItems);
+        // aggregateList.items = aItems;
+        // aggregateList.votes = aVotes;
         //store.updateAggregateList(aggregateList._id, aggregateList)
+
+
+
     }
 
     store.updateAggregateLikes = function (list) {
@@ -784,6 +788,19 @@ function GlobalStoreContextProvider(props) {
             list.dislike.push(uName);
         }
         console.log(list);
+        store.updateAggregateList(list._id, list);
+    }
+
+    store.addAggregateComment = function(comment, list) {
+        let newComment = {"userName": auth.user.userName, "comment": comment}
+        list.comments.push(newComment);
+        //console.log(store.currentList);
+        store.updateAggregateList(list._id, list);
+    }
+
+    store.updateAggregateViews = function(list) {
+        let x = list.views
+        list.views = x+1;
         store.updateAggregateList(list._id, list);
     }
 

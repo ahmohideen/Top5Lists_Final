@@ -20,6 +20,8 @@ import CommentBox from './CommentBox'
 import AggregateListsView from './AggregateListsView'
 import AggregateListCard from './AggregateListCard'
 import UserListsView from './UserListsView'
+import AggregateCommentBox from './AggregateCommentBox'
+import AggregateTop5Box from './AggregateTop5Box'
 /*
     This serves as a module so that we can import
     all the other components as we wish.
@@ -48,4 +50,6 @@ export {
     CommentBox,
     AggregateListsView,
     AggregateListCard,
-    UserListsView }
+    UserListsView,
+    AggregateCommentBox,
+    AggregateTop5Box }
