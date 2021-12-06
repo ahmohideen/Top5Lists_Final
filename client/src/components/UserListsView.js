@@ -3,6 +3,7 @@ import { GlobalStoreContext } from '../store'
 import ToolBar from './ToolBar';
 import List from '@mui/material/List';
 import ListCard from './ListCard.js'
+import AuthContext from '../auth';
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -10,10 +11,12 @@ import ListCard from './ListCard.js'
 */
 const UserListsView = () => {
     const { store } = useContext(GlobalStoreContext);
+    const { auth } = useContext(AuthContext);
       
     useEffect(() => {
         console.log("switched to user lists view")
         store.loadIdNamePairs();
+        
     }, []);
 
 

@@ -16,6 +16,7 @@ const AllListsView = () => {
     useEffect(() => {
         console.log("switched to all lists view")
         store.loadIdNamePairs();
+        
     }, []);
 
     function handleCreateNewList() {

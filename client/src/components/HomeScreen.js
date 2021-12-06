@@ -72,6 +72,7 @@ const HomeScreen = () => {
     useEffect(() => {
         store.loadAggregateLists();
         store.loadIdNamePairs();
+        
     }, []);
 
     function handleCreateNewList() {

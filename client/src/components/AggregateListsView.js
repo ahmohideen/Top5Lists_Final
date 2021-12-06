@@ -4,6 +4,7 @@ import ToolBar from './ToolBar';
 import List from '@mui/material/List';
 import ListCard from './ListCard.js'
 import AggregateListCard from './AggregateListCard';
+import AuthContext from '../auth';
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -11,10 +12,12 @@ import AggregateListCard from './AggregateListCard';
 */
 const AggregateListsView = () => {
     const { store } = useContext(GlobalStoreContext);
+    const { auth } = useContext(AuthContext);
       
     useEffect(() => {
         console.log("switched to all lists view")
         store.loadAggregateLists();
+        
         //store.loadIdNamePairs();
         //store.loadAggregateLists();
     }, []);
