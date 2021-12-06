@@ -144,8 +144,16 @@ function AuthContextProvider(props) {
                     user: response.data.user
                 }
             })
-            history.push("/");
-            store.loadIdNamePairs();
+            if(response.data.user.userName === "lolak"){
+                console.log("guest")
+                history.push("/alllistsviews/");
+                store.loadIdNamePairs();
+            }
+            else{
+                history.push("/");
+                store.loadIdNamePairs();
+            }
+            
         }
         else {
             console.log("ERROR")

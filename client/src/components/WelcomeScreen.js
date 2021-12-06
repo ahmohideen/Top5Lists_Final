@@ -22,6 +22,7 @@ export default function WelcomeScreen() {
         if(auth.errMsg){
             console.log(auth.errMsg);
           }
+        //store.push('/alllistsviews/');
     }
 
     return (
